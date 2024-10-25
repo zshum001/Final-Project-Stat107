@@ -1,0 +1,20 @@
+---
+title: "Stat107 Final Project"
+subtitle: "Insert Question here"
+author: "Crystal Kuong, Gracelynne Mohad, Sumeet Sammi, Zoe Shum"
+date: "2024-12-13"
+format: html
+editor: visual
+---
+
+# Introduction
+
+Brief paragraph
+
+## The Dataset 
+
+Brief paragraph
+
+```{r}
+#
+```
