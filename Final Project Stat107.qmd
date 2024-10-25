@@ -3,8 +3,16 @@ title: "Stat107 Final Project"
 subtitle: "Insert Question here"
 author: "Crystal Kuong, Gracelynne Mohad, Sumeet Sammi, Zoe Shum"
 date: "2024-12-13"
-format: html
-editor: visual
+format:
+  html:
+    toc: true
+    toc-location: left
+    embed-resources: true
+    code-line-numbers: true
+    page-layout: full
+  pdf:
+    fontsize: 10pt
+    code-line-numbers: true
 ---
 
 # Introduction
