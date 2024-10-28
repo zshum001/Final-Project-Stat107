@@ -26,6 +26,4 @@ Brief paragraph
 ```{r}
 AirQuality <- read.csv("AirQualityUCI.csv")
 head(AirQuality)
-
-nrow(AirQuality)
 ```
