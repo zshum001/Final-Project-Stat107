@@ -19,10 +19,13 @@ format:
 
 Brief paragraph
 
-## The Dataset 
+## The Dataset
 
 Brief paragraph
 
 ```{r}
-#
+AirQuality <- read.csv("AirQualityUCI.csv")
+head(AirQuality)
+
+nrow(AirQuality)
 ```
