@@ -1,6 +1,6 @@
 ---
 title: "Stat107 Final Project"
-subtitle: "Insert Question here"
+subtitle: "How do harmful air pollutant concentrations vary across different months within a year?"
 author: "Crystal Kuong, Gracelynne Mohad, Sumeet Sammi, Zoe Shum"
 date: "2024-12-13"
 format:
