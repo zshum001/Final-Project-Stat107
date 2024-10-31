@@ -1,6 +1,6 @@
 ---
 title: "Stat107 Final Project"
-subtitle: "How does the concentration of harmful pollutants in the air fluctuate throughout the months in a year"
+subtitle: "How do harmful air pollutant concentrations vary across different months within a year?"
 author: "Crystal Kuong, Gracelynne Mohad, Sumeet Sammi, Zoe Shum"
 date: "2024-12-13"
 format:
