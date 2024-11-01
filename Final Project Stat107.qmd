@@ -32,22 +32,27 @@ dim(AirQuality)
 
 # Column names
 colnames(AirQuality)
-
-# Load libraries
-library(dplyr)
-library(lubridate)
-
-# Convert 'Date' column to date format
-AirQuality$Date <- dmy(AirQuality$Date)
-AirQuality$Date <- format(AirQuality$Date, "%Y-%m")
-
-# Group by (NA values ignored)
-AirQualityM <- summarize(
-  group_by(AirQuality, Date),
-  across(where(is.numeric), mean, na.rm = TRUE)
-)
-
-print(AirQualityM)
 ```
 
 ## Plan for Analysis
+
+```{r}
+# Load libraries
+library(dplyr) # A grammar of data manipulation
+library(lubridate) # Makes dealing with dates a little easier
+
+# Convert 'Date' column to date format
+AirQuality$Date <- dmy(AirQuality$Date) # "Parse dates with *y*ear, *m*onth, and *d*ay components"
+AirQuality$Date <- format(AirQuality$Date, "%Y-%m") # Formats date to YYYY-mm 
+
+# Group by (NA values ignored)
+AirQualityM <- summarize( 
+  group_by(AirQuality, Date),
+  across(where(is.numeric), mean, na.rm = TRUE)
+)
+# group_by(AirQuality, Date): groups dataset by the Date column
+# across(where(is.numeric), mean, na.rm = TRUE): average is calculated for each numeric column across all date groups, while removing all NA values
+# summarize(): creates a new condensed dataset 
+
+print(AirQualityM)
+```
