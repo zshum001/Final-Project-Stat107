@@ -28,6 +28,7 @@ The UCI Air Quality Dataset was collected by the University of California, Irvin
 library(readxl)
 library(dplyr)
 library(lubridate)
+library(ggplot2)
 ```
 
 ```{r}
@@ -57,4 +58,11 @@ airM <- air %>%
 )
 
 head(airM, 5)
+
+# Create plot (average concentration of CO across months)
+ggplot(airM, aes(x = Date, y = CO.GT.)) +
+  geom_point() +
+  labs(title = "Avergae concentration of Carbon Monoxide by Month",
+       x = "Date",
+       y = "Concentration of CO in µg/m³")
 ```
