@@ -24,30 +24,37 @@ Air quality is a critical component in environmental health, directly influencin
 The UCI Air Quality Dataset was collected by the University of California, Irvine and acquired from Kaggle. It measures the concentration of about 5 different pollutants in the air in a given area. Some pollutants that are measured include carbon monoxide, benzene, and nitrogen dioxide. It measures pollutant concentrations every hour from March 2004 to April 2005.
 
 ```{r}
-AirQuality <- read.csv("AirQualityUCI.csv")
-head(AirQuality)
-
-# Number of rows and columns
-dim(AirQuality)
-
-# Column names
-colnames(AirQuality)
-
-# Load libraries
+#Load libraries
+library(readxl)
 library(dplyr)
 library(lubridate)
+```
 
-# Convert 'Date' column to date format
-AirQuality$Date <- dmy(AirQuality$Date)
-AirQuality$Date <- format(AirQuality$Date, "%Y-%m")
+```{r}
+#1: options(width = 50)
+air <- read_excel("AirQualityUCI.xls")
+head(air)
 
-# Group by (NA values ignored)
-AirQualityM <- summarise(
-  group_by(AirQuality, Date),
-  across(where(is.numeric), mean, na.rm = TRUE)
-)
+# Number of rows and columns
+dim(air)
 
-print(AirQualityM)
+# Column names
+colnames(air)
 ```
 
 ## Plan for Analysis
+
+```{r}
+# Convert 'Date' column to date format
+air$Date <- ymd(air$Date) # "Parse dates with *y*ear, *m*onth, and *d*ay components"
+air$Date <- format(air$Date, "%Y-%m") # Formats date to YYYY-mm 
+
+# Group by month, where the average is calculated for each numeric column across all month groups, while removing all NA values
+# summarise(): creates a new condensed dataset 
+airM <- air %>%
+  group_by(Date) %>%
+  summarise(across(where(is.numeric), ~mean(., na.rm = TRUE))
+)
+
+head(airM, 5)
+```

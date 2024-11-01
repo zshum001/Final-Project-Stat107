@@ -3089,6 +3089,7 @@ vertical-align: -.125em;
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
   <li><a href="#the-dataset" id="toc-the-dataset" class="nav-link" data-scroll-target="#the-dataset">The Dataset</a></li>
+  <li><a href="#plan-for-analysis" id="toc-plan-for-analysis" class="nav-link" data-scroll-target="#plan-for-analysis">Plan for Analysis</a></li>
   </ul></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Final-Project-Stat107.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
@@ -3100,7 +3101,7 @@ vertical-align: -.125em;
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Stat107 Final Project</h1>
-<p class="subtitle lead">Insert Question here</p>
+<p class="subtitle lead">How do harmful air pollutant concentrations vary across different months within a year?</p>
 </div>
 
 
@@ -3131,12 +3132,99 @@ vertical-align: -.125em;
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Brief paragraph</p>
+<p>Air quality is a critical component in environmental health, directly influencing both the ecosystem and human well-being. It is determined by the presence of various pollutants including, but not limited to nitrogen dioxide and carbon monoxide. Poor air quality is linked to serious health issues, including respiratory diseases, cardiovascular problems, and reduced life expectancy. Moreover, air pollution contributes to climate change and harming wildlife. Monitoring and understanding air quality prompts initiatives centered on reducing the concentration of air pollutants, thereby, creating a cleaner environment.</p>
 <section id="the-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="the-dataset">The Dataset</h2>
 <p>Brief paragraph</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">#Load libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: &#39;dplyr&#39;</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from &#39;package:stats&#39;:
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from &#39;package:base&#39;:
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">library</span>(lubridate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: &#39;lubridate&#39;</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from &#39;package:base&#39;:
+
+    date, intersect, setdiff, union</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">#1: options(width = 50)</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>air <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;AirQualityUCI.xls&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="fu">head</span>(air)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 15
+  Date                Time                `CO(GT)` `PT08.S1(CO)` `NMHC(GT)`
+  &lt;dttm&gt;              &lt;dttm&gt;                 &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;
+1 2004-03-10 00:00:00 1899-12-31 18:00:00      2.6          1360        150
+2 2004-03-10 00:00:00 1899-12-31 19:00:00      2            1292        112
+3 2004-03-10 00:00:00 1899-12-31 20:00:00      2.2          1402         88
+4 2004-03-10 00:00:00 1899-12-31 21:00:00      2.2          1376         80
+5 2004-03-10 00:00:00 1899-12-31 22:00:00      1.6          1272         51
+6 2004-03-10 00:00:00 1899-12-31 23:00:00      1.2          1197         38
+# ℹ 10 more variables: `C6H6(GT)` &lt;dbl&gt;, `PT08.S2(NMHC)` &lt;dbl&gt;,
+#   `NOx(GT)` &lt;dbl&gt;, `PT08.S3(NOx)` &lt;dbl&gt;, `NO2(GT)` &lt;dbl&gt;,
+#   `PT08.S4(NO2)` &lt;dbl&gt;, `PT08.S5(O3)` &lt;dbl&gt;, T &lt;dbl&gt;, RH &lt;dbl&gt;, AH &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Number of rows and columns</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="fu">dim</span>(air)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9357   15</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Column names</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="fu">colnames</span>(air)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] &quot;Date&quot;          &quot;Time&quot;          &quot;CO(GT)&quot;        &quot;PT08.S1(CO)&quot;  
+ [5] &quot;NMHC(GT)&quot;      &quot;C6H6(GT)&quot;      &quot;PT08.S2(NMHC)&quot; &quot;NOx(GT)&quot;      
+ [9] &quot;PT08.S3(NOx)&quot;  &quot;NO2(GT)&quot;       &quot;PT08.S4(NO2)&quot;  &quot;PT08.S5(O3)&quot;  
+[13] &quot;T&quot;             &quot;RH&quot;            &quot;AH&quot;           </code></pre>
+</div>
+</div>
+</section>
+<section id="plan-for-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="plan-for-analysis">Plan for Analysis</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># Convert &#39;Date&#39; column to date format</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>air<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">ymd</span>(air<span class="sc">$</span>Date) <span class="co"># &quot;Parse dates with *y*ear, *m*onth, and *d*ay components&quot;</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a>air<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">format</span>(air<span class="sc">$</span>Date, <span class="st">&quot;%Y-%m&quot;</span>) <span class="co"># Formats date to YYYY-mm </span></span>
+<span id="cb14-4"><a href="#cb14-4"></a></span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="co"># Group by month, where the average is calculated for each numeric column across all month groups, while removing all NA values</span></span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="co"># summarise(): creates a new condensed dataset </span></span>
+<span id="cb14-7"><a href="#cb14-7"></a>airM <span class="ot">&lt;-</span> air <span class="sc">%&gt;%</span></span>
+<span id="cb14-8"><a href="#cb14-8"></a>  <span class="fu">group_by</span>(Date) <span class="sc">%&gt;%</span></span>
+<span id="cb14-9"><a href="#cb14-9"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span><span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb14-10"><a href="#cb14-10"></a>)</span>
+<span id="cb14-11"><a href="#cb14-11"></a></span>
+<span id="cb14-12"><a href="#cb14-12"></a><span class="fu">head</span>(airM, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 14
+  Date    `CO(GT)` `PT08.S1(CO)` `NMHC(GT)` `C6H6(GT)` `PT08.S2(NMHC)` `NOx(GT)`
+  &lt;chr&gt;      &lt;dbl&gt;         &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;           &lt;dbl&gt;     &lt;dbl&gt;
+1 2004-03    -4.85         1223.       96.6      9.93             936.     129. 
+2 2004-04   -60.9          1112.      121.       2.50             906.      29.7
+3 2004-05   -39.3          1053.     -199.       6.26             929.      58.9
+4 2004-06   -19.4           956.     -200       -0.519            905.      90.3
+5 2004-07   -48.7          1045.     -200       10.3              970.     113. 
+# ℹ 7 more variables: `PT08.S3(NOx)` &lt;dbl&gt;, `NO2(GT)` &lt;dbl&gt;,
+#   `PT08.S4(NO2)` &lt;dbl&gt;, `PT08.S5(O3)` &lt;dbl&gt;, T &lt;dbl&gt;, RH &lt;dbl&gt;, AH &lt;dbl&gt;</code></pre>
+</div>
 </div>
 </section>
 </section>
