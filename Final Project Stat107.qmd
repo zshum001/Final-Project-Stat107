@@ -42,7 +42,7 @@ AirQuality$Date <- dmy(AirQuality$Date)
 AirQuality$Date <- format(AirQuality$Date, "%Y-%m")
 
 # Group by (NA values ignored)
-AirQualityM <- summarise(
+AirQualityM <- summarize(
   group_by(AirQuality, Date),
   across(where(is.numeric), mean, na.rm = TRUE)
 )
