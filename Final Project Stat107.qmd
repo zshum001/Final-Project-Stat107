@@ -21,7 +21,7 @@ Air quality is a critical component in environmental health, directly influencin
 
 ## The Dataset
 
-Brief paragraph
+The UCI Air Quality Dataset was collected by the University of California, Irvine and acquired from Kaggle. It measures the concentration of about 5 different pollutants in the air in a given area. Some pollutants that are measured include carbon monoxide, benzene, and nitrogen dioxide. It measures pollutant concentrations every hour from March 2004 to April 2005.
 
 ```{r}
 AirQuality <- read.csv("AirQualityUCI.csv")
