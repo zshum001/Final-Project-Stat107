@@ -17,7 +17,7 @@ format:
 
 # Introduction
 
-Brief paragraph
+Air quality is a critical component in environmental health, directly influencing both the ecosystem and human well-being. It is determined by the presence of various pollutants including, but not limited to nitrogen dioxide and carbon monoxide. Poor air quality is linked to serious health issues, including respiratory diseases, cardiovascular problems, and reduced life expectancy. Moreover, air pollution contributes to climate change and harming wildlife. Monitoring and understanding air quality prompts initiatives centered on reducing the concentration of air pollutants, thereby, creating a cleaner environment.
 
 ## The Dataset
 
