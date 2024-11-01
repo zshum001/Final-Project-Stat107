@@ -24,35 +24,37 @@ Air quality is a critical component in environmental health, directly influencin
 Brief paragraph
 
 ```{r}
-AirQuality <- read.csv("AirQualityUCI.csv")
-head(AirQuality)
+#Load libraries
+library(readxl)
+library(dplyr)
+library(lubridate)
+```
+
+```{r}
+#1: options(width = 50)
+air <- read_excel("AirQualityUCI.xls")
+head(air)
 
 # Number of rows and columns
-dim(AirQuality)
+dim(air)
 
 # Column names
-colnames(AirQuality)
+colnames(air)
 ```
 
 ## Plan for Analysis
 
 ```{r}
-# Load libraries
-library(dplyr) # A grammar of data manipulation
-library(lubridate) # Makes dealing with dates a little easier
-
 # Convert 'Date' column to date format
-AirQuality$Date <- dmy(AirQuality$Date) # "Parse dates with *y*ear, *m*onth, and *d*ay components"
-AirQuality$Date <- format(AirQuality$Date, "%Y-%m") # Formats date to YYYY-mm 
+air$Date <- ymd(air$Date) # "Parse dates with *y*ear, *m*onth, and *d*ay components"
+air$Date <- format(air$Date, "%Y-%m") # Formats date to YYYY-mm 
 
-# Group by (NA values ignored)
-AirQualityM <- summarize( 
-  group_by(AirQuality, Date),
-  across(where(is.numeric), mean, na.rm = TRUE)
+# Group by month, where the average is calculated for each numeric column across all month groups, while removing all NA values
+# summarise(): creates a new condensed dataset 
+airM <- air %>%
+  group_by(Date) %>%
+  summarise(across(where(is.numeric), ~mean(., na.rm = TRUE))
 )
-# group_by(AirQuality, Date): groups dataset by the Date column
-# across(where(is.numeric), mean, na.rm = TRUE): average is calculated for each numeric column across all date groups, while removing all NA values
-# summarize(): creates a new condensed dataset 
 
-print(AirQualityM)
+head(airM, 5)
 ```
