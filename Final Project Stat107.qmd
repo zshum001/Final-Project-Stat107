@@ -21,17 +21,20 @@ Air quality is a critical component in environmental health, directly influencin
 
 ## The Dataset
 
-Brief paragraph
+The UCI Air Quality Dataset was collected by the University of California, Irvine and acquired from Kaggle. It measures the concentration of about 5 different pollutants in the air in a given area. Some pollutants that are measured include carbon monoxide, benzene, and nitrogen dioxide. It measures pollutant concentrations every hour from March 2004 to April 2005.
 
-```{r}
-#Load libraries
-library(readxl)
-library(dplyr)
-library(lubridate)
-```
+## Plan for Analysis
 
 ```{r}
 #1: options(width = 50)
+
+# Load libraries
+library(readxl)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+
+# Read dataset
 air <- read_excel("AirQualityUCI.xls")
 head(air)
 
@@ -40,11 +43,7 @@ dim(air)
 
 # Column names
 colnames(air)
-```
 
-## Plan for Analysis
-
-```{r}
 # Convert 'Date' column to date format
 air$Date <- ymd(air$Date) # "Parse dates with *y*ear, *m*onth, and *d*ay components"
 air$Date <- format(air$Date, "%Y-%m") # Formats date to YYYY-mm 
@@ -55,6 +54,14 @@ airM <- air %>%
   group_by(Date) %>%
   summarise(across(where(is.numeric), ~mean(., na.rm = TRUE))
 )
-
 head(airM, 5)
+```
+
+```{r}
+# Create plot (average concentration of CO across months)
+ggplot(airM, aes(x = Date, y =`CO(GT)`)) +
+  geom_point() +
+  labs(title = "Avergae concentration of Carbon Monoxide by Month",
+       x = "Date",
+       y = "Concentration of CO in µg/m³")
 ```
