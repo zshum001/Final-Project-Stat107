@@ -3091,10 +3091,11 @@ vertical-align: -.125em;
   <li><a href="#the-dataset" id="toc-the-dataset" class="nav-link" data-scroll-target="#the-dataset">The Dataset</a>
   <ul class="collapse">
   <li><a href="#packages" id="toc-packages" class="nav-link" data-scroll-target="#packages">Packages</a></li>
-  <li><a href="#reading-dataset" id="toc-reading-dataset" class="nav-link" data-scroll-target="#reading-dataset">Reading dataset</a></li>
+  <li><a href="#reading-dataset" id="toc-reading-dataset" class="nav-link" data-scroll-target="#reading-dataset">Reading Dataset</a></li>
+  <li><a href="#reformatting-the-dataset" id="toc-reformatting-the-dataset" class="nav-link" data-scroll-target="#reformatting-the-dataset">Reformatting The Dataset</a></li>
   </ul></li>
-  <li><a href="#plan-for-analysis" id="toc-plan-for-analysis" class="nav-link" data-scroll-target="#plan-for-analysis">Plan for Analysis</a></li>
   </ul></li>
+  <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology">Methodology</a></li>
   <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Final-Project-Stat107.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
@@ -3173,7 +3174,7 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 </div>
 </section>
 <section id="reading-dataset" class="level3">
-<h3 class="anchored" data-anchor-id="reading-dataset">Reading dataset</h3>
+<h3 class="anchored" data-anchor-id="reading-dataset">Reading Dataset</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>air <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;AirQualityUCI.xls&quot;</span>)</span>
 <span id="cb7-2"><a href="#cb7-2"></a><span class="fu">head</span>(air)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3225,13 +3226,8 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 </ol>
 <p>Descriptions for variables 11-15 were not specified by the author, hence they will be omitted in the analysis. Additionally, variables will be renamed to enhance clarity.</p>
 </section>
-</section>
-<section id="plan-for-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="plan-for-analysis">Plan for Analysis</h2>
-</section>
-</section>
-<section id="analysis" class="level1">
-<h1>Analysis</h1>
+<section id="reformatting-the-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="reformatting-the-dataset">Reformatting The Dataset</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># Convert &#39;Date&#39; column to y-m-d format</span></span>
 <span id="cb13-2"><a href="#cb13-2"></a>air<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">ymd</span>(air<span class="sc">$</span>Date)</span>
@@ -3266,6 +3262,14 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 #   `PT08.S4(NO2)` &lt;dbl&gt;, `PT08.S5(O3)` &lt;dbl&gt;, T &lt;dbl&gt;, RH &lt;dbl&gt;, AH &lt;dbl&gt;</code></pre>
 </div>
 </div>
+</section>
+</section>
+</section>
+<section id="methodology" class="level1">
+<h1>Methodology</h1>
+</section>
+<section id="analysis" class="level1">
+<h1>Analysis</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Plot monthly CO Concentrations</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a>airM <span class="sc">%&gt;%</span></span>

@@ -32,7 +32,7 @@ library(lubridate)
 library(tidyverse)
 ```
 
-### Reading dataset
+### Reading Dataset
 
 ```{r}
 air <- read_excel("AirQualityUCI.xls")
@@ -79,9 +79,7 @@ The original dataset contains 9,357 observations and 15 variables.
 
 Descriptions for variables 11-15 were not specified by the author, hence they will be omitted in the analysis. Additionally, variables will be renamed to enhance clarity.
 
-## Plan for Analysis
-
-# Analysis
+### Reformatting The Dataset 
 
 ```{r}
 # Convert 'Date' column to y-m-d format
@@ -101,6 +99,10 @@ airM <- air %>%
 
 head(airM, 5)
 ```
+
+# Methodology
+
+# Analysis
 
 ```{r fig.width=10, fig.height=8}
 # Plot monthly CO Concentrations
