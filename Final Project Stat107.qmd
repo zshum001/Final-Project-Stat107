@@ -23,18 +23,18 @@ Air quality is a critical component in environmental health, directly influencin
 
 The UCI Air Quality Dataset was collected by the University of California, Irvine and acquired from Kaggle. It measures the concentration of about 5 different pollutants in the air in a given area. Some pollutants that are measured include carbon monoxide, benzene, and nitrogen dioxide. It measures pollutant concentrations every hour from March 2004 to April 2005.
 
-## Plan for Analysis
+### Packages
 
 ```{r}
-#1: options(width = 50)
-
-# Load libraries
 library(readxl)
-library(dplyr)
-library(lubridate)
 library(ggplot2)
+library(lubridate)
+library(tidyverse)
+```
 
-# Read dataset
+### Reading Dataset
+
+```{r}
 air <- read_excel("AirQualityUCI.xls")
 head(air)
 
@@ -43,25 +43,136 @@ dim(air)
 
 # Column names
 colnames(air)
+```
 
-# Convert 'Date' column to date format
-air$Date <- ymd(air$Date) # "Parse dates with *y*ear, *m*onth, and *d*ay components"
-air$Date <- format(air$Date, "%Y-%m") # Formats date to YYYY-mm 
+The original dataset contains 9,357 observations and 15 variables.
 
-# Group by month, where the average is calculated for each numeric column across all month groups, while removing all NA values
-# summarise(): creates a new condensed dataset 
+1.  `Date`: The date of the measurement
+
+2.  `Time`: The time of the measurement.
+
+3.  `CO(GT)`: Concentration of carbon monoxide (CO) in the air (µg/m³).
+
+4.  `PT0.S1(CO)`: Sensor measurement for CO concentration.
+
+5.  `NMHC(GT)`: Concentration of non-methane hydrocarbons (NMHC) (µg/m³).
+
+6.  `C6H6(GT)`: Concentration of benzene (C6H6) in the air (µg/m³).
+
+7.  `PT08.S2(NMHC)`: Sensor measurement for NMHC concentration.
+
+8.  `NOx(GT)`: Concentration of nitrogen oxides (NOx) in the air (µg/m³).
+
+9.  `PT08.S3(NOx)`: Sensor measurement for NOx concentration.
+
+10. `NO2(GT)`: Concentration of nitrogen dioxide (NO2) in the air (µg/m³).
+
+11. `PT08.S4(NO2)`: UNKNOWN
+
+12. `PT08.S5(03)`: UNKNOWN
+
+13. `T`: UNKNOWN
+
+14. `RH`: UNKNOWN
+
+15. `AH`: UNKNOWN
+
+Descriptions for variables 11-15 were not specified by the author, hence they will be omitted in the analysis. Additionally, variables will be renamed to enhance clarity.
+
+### Reformatting The Dataset 
+
+```{r}
+# Convert 'Date' column to y-m-d format
+air$Date <- ymd(air$Date)
+
+# Create numerical Month and Year columns
+air <- air %>%
+  mutate(
+    Month = month(Date, label = TRUE), # Extracts month as a numeric value (1-12)
+    Year = year(Date)    # Extracts year
+  )
+
+# Group by Year and Month for summarization
 airM <- air %>%
-  group_by(Date) %>%
-  summarise(across(where(is.numeric), ~mean(., na.rm = TRUE))
-)
+  group_by(Year, Month) %>%
+  summarize(across(where(is.numeric), ~mean(., na.rm = TRUE)))
+
 head(airM, 5)
 ```
 
+# Methodology
+
+# Analysis
+
+```{r fig.width=10, fig.height=8}
+# Plot monthly CO Concentrations
+airM %>%
+  # Use interaction to combine Month and Year
+  ggplot(aes(x = interaction(Month, Year, sep = "-"), y = `PT08.S1(CO)`)) +
+  geom_col(fill = "skyblue") + 
+  # Adding line plot to show trend
+  geom_line(group = 1, color = "blue") +
+  # Horizontal line for mean CO
+  geom_hline(aes(yintercept = mean(airM$`PT08.S1(CO)`), color = "Mean"), linetype = "dashed") +
+  # Horizontal line for median CO
+  geom_hline(aes(yintercept = median(airM$`PT08.S1(CO)`), color = "Median"), linetype = "dashed") +
+  labs(
+    title = "Average Concentration of Carbon Monoxide by Month (2004-2005)",
+    x = "Month-Year",
+    y = "Concentration of CO in µg/m³"
+  ) +
+  scale_color_manual(
+    values = c("Mean" = "red", "Median" = "darkgreen"),
+    labels = c("Mean CO Concentration (1046.27)", "Median CO Concentration (1047.141)"),
+    name = "Legend"
+  ) +
+  # Rotates the x-axis labels for readability
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r fig.width=10, fig.height=8}
+# Plot monthly Non-Methane Hydrocarbon Concentrations 
+airM %>%
+  ggplot(aes(x = interaction(Month, Year, sep = "-"), y = `PT08.S2(NMHC)`)) +
+  geom_col(fill = "pink") + 
+  geom_line(group = 1, color = "blue") +
+  geom_hline(aes(yintercept = mean(airM$`PT08.S2(NMHC)`), color = "Mean"), linetype = "dashed") +
+  geom_hline(aes(yintercept = median(airM$`PT08.S2(NMHC)`), color = "Median"), linetype = "dashed") +
+  labs(
+    title = "Average Concentration of Non-Methane Hydrocarbons by Month",
+    x = "Month-Year",
+    y = "Concentration of NMHC in µg/m³"
+  ) +
+  scale_color_manual(
+    values = c("Mean" = "red", "Median" = "darkgreen"),
+    labels = c("Mean NMHC Concentration (882.4646)", "Median NMHC Concentration (905.4681)"),
+    name = "Reference Lines"
+  ) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+1.  `PT08.S3(NOx)`
+
+```{r fig.width=10, fig.height=8}
+# Plot monthly Nitrogen Oxide Concentrations 
+airM %>%
+  ggplot(aes(x = interaction(Month, Year, sep = "-"), y = `PT08.S3(NOx)`)) +
+  geom_col(fill = "lightcoral") + 
+  geom_line(group = 1, color = "blue") +
+  geom_hline(aes(yintercept = mean(airM$`PT08.S3(NOx)`), color = "Mean"), linetype = "dashed") +
+  geom_hline(aes(yintercept = median(airM$`PT08.S3(NOx)`), color = "Median"), linetype = "dashed") +
+  labs(
+    title = "Average Concentration of Nitrogen Oxide by Month",
+    x = "Month-Year",
+    y = "Concentration of NOx in µg/m³"
+  ) +
+  scale_color_manual(
+    values = c("Mean" = "red", "Median" = "darkgreen"),
+    labels = c("Mean NOx Concentration (806.3458)", "Median NMHC Concentration (787.5153)"),
+    name = "Reference Lines"
+  ) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
 ```{r}
-# Create plot (average concentration of CO across months)
-ggplot(airM, aes(x = Date, y =`CO(GT)`)) +
-  geom_point() +
-  labs(title = "Avergae concentration of Carbon Monoxide by Month",
-       x = "Date",
-       y = "Concentration of CO in µg/m³")
 ```
