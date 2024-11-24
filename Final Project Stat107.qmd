@@ -79,7 +79,7 @@ The original dataset contains 9,357 observations and 15 variables.
 
 Descriptions for variables 11-15 were not specified by the author, hence they will be omitted in the analysis. Additionally, variables will be renamed to enhance clarity.
 
-### Reformatting The Dataset 
+### Reformatting The Dataset
 
 ```{r}
 # Convert 'Date' column to y-m-d format
@@ -102,7 +102,7 @@ head(airM, 5)
 
 # Methodology
 
-# Analysis
+# Analysis 
 
 ```{r fig.width=10, fig.height=8}
 # Plot monthly CO Concentrations
