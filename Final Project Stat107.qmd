@@ -62,23 +62,111 @@ The original dataset contains 9,357 observations and 15 variables.
 
 7.  `PT08.S2(NMHC)`: Sensor measurement for NMHC concentration.
 
-8.  `NOx(GT)`: Concentration of nitrogen oxides (NOx) in the air (µg/m³).
+8.  `NOx(GT)`: Concentration of nitrogen oxide (NOx) in the air (µg/m³).
 
 9.  `PT08.S3(NOx)`: Sensor measurement for NOx concentration.
 
 10. `NO2(GT)`: Concentration of nitrogen dioxide (NO2) in the air (µg/m³).
 
-11. `PT08.S4(NO2)`: UNKNOWN
+11. `PT08.S4(NO2)`: Sensor measurement for NO2 concentration.
 
-12. `PT08.S5(03)`: UNKNOWN
+12. `PT08.S5(O3)`: Sensor measurement for ozone (O3) concentration
 
-13. `T`: UNKNOWN
+13. `T`: Temperature (Celsius)
 
-14. `RH`: UNKNOWN
+14. `RH`: Relative humidity (g/m³)
 
-15. `AH`: UNKNOWN
+15. `AH`: Absolute humidity (g/m³)
 
-Descriptions for variables 11-15 were not specified by the author, hence they will be omitted in the analysis. Additionally, variables will be renamed to enhance clarity.
+### Renaming Columns 
+
+Variable columns 3-12 will be renamed as followed to enhance clarity:
+
+`CO(GT)` to `CO`
+
+`PT0.S1(CO)` to `S_CO`
+
+`NMHC(GT)` to `NMHC`
+
+`PT08.S2(NMHC)` to `S_NMHC`
+
+`C6H6(GT)` to `C6H6`
+
+`NOx(GT)` to `NOx`
+
+`PT08.S3(NOx)` to `S_NOx`
+
+`NO2(GT)` to `NO2`
+
+`PT08.S4(NO2)` to `S_NO2`
+
+`PT08.S5(O3)` to `S_O3`
+
+```{r}
+air <- air %>% 
+  rename(
+    CO = `CO(GT)`,
+    S_CO = `PT08.S1(CO)`,
+    NMHC = `NMHC(GT)`,
+    S_NMHC = `PT08.S2(NMHC)`,
+    C6H6 = `C6H6(GT)`,
+    NOx = `NOx(GT)`,
+    S_NOx = `PT08.S3(NOx)`,
+    NO2 = `NO2(GT)`,
+    S_NO2 = `PT08.S4(NO2)`,
+    S_O3 = `PT08.S5(O3)`
+  )
+```
+
+### Tidying The Dataset
+
+```{r}
+#Summarize dataset (excluding Date and Time columns)
+summary(air[, -c(1, 2)])
+```
+
+Based on the summary, it will be more helpful to implement the sensor measurements in the analyses since non-sensor measurements have negative means (which is unusual).
+
+```{r}
+# Histogram for S_CO 
+hist(air$S_CO,
+     main = "Histogram of CO concentrations",
+     xlab = "CO concentrations")
+```
+
+From graphing a histogram of, it is obvious that outlines exist. We will use variable S_CO as a starting point for tidying up the data. We will use the IQR method to identify outliers and filter them out of the dataset.
+
+```{r}
+# Calculate IQR
+Q1 <- quantile(air$S_CO, 0.25, na.rm = TRUE)
+Q3 <- quantile(air$S_CO, 0.75, na.rm = TRUE)
+IQR <- Q3 - Q1
+
+# Define outlier bounds
+lower_bound <- Q1 - 1.5 * IQR
+upper_bound <- Q3 + 1.5 * IQR
+
+# Filter rows to remove outliers
+air_filtered <- air[air$S_CO >= lower_bound & air$S_CO <= upper_bound, ]
+nrow(air)
+nrow(air_filtered)
+nrow(air) - nrow(air_filtered)
+```
+
+484 observations were removed from the dataset.
+
+```{r}
+hist(air_filtered$S_CO,
+     main = "Histogram of CO concentrations (after filtering)",
+     xlab = "CO concentrations")
+```
+
+while still positively skewed, it is a great improvement from the previous graph
+
+```{r}
+# Reassign original dataset with filtered dataset
+air <- air_filtered
+```
 
 ### Reformatting The Dataset
 
@@ -111,12 +199,16 @@ airM %>%
   # Use interaction to combine Month and Year
   ggplot(aes(x = interaction(Month, Year, sep = "-"))) +
   # Add points and lines for different pollutants
-  geom_point(aes(y = `PT08.S1(CO)`, color = "Carbon Monoxide")) + 
-  geom_line(aes(y = `PT08.S1(CO)`, color = "Carbon Monoxide", group = 1)) +
-  geom_point(aes(y = `PT08.S2(NMHC)`, color = "Non-Methane Hydrocarbon")) +
-  geom_line(aes(y = `PT08.S2(NMHC)`, color = "Non-Methane Hydrocarbon", group = 2)) +
-  geom_point(aes(y = `PT08.S3(NOx)`, color = "Nitrogen Oxide")) + 
-  geom_line(aes(y = `PT08.S3(NOx)`, color = "Nitrogen Oxide", group = 3)) +
+  geom_point(aes(y = S_CO, color = "Carbon Monoxide")) + 
+  geom_line(aes(y = S_CO, color = "Carbon Monoxide", group = 1)) +
+  geom_point(aes(y = S_NMHC, color = "Non-Methane Hydrocarbon")) +
+  geom_line(aes(y = S_NMHC, color = "Non-Methane Hydrocarbon", group = 2)) +
+  geom_point(aes(y = S_NOx, color = "Nitrogen Oxide")) + 
+  geom_line(aes(y = S_NOx, color = "Nitrogen Oxide", group = 3)) +
+  geom_point(aes(y = S_NO2, color = "Nitrogen Dioxide")) + 
+  geom_line(aes(y = S_NO2, color = "Nitrogen Dioxide", group = 3)) +
+  geom_point(aes(y = S_O3, color = "Ozone")) + 
+  geom_line(aes(y = S_O3, color = "Ozone", group = 3)) +
   labs(
     title = "Average Concentrations of Pollutants by Month (2004-2005)",
     x = "Month-Year",
@@ -125,27 +217,33 @@ airM %>%
   scale_color_manual(
     values = c("Carbon Monoxide" = "blue", 
                "Non-Methane Hydrocarbon" = "red", 
-               "Nitrogen Oxide" = "chartreuse3"),
+               "Nitrogen Oxide" = "chartreuse3",
+               "Nitrogen Dioxide" = "purple",
+               "Ozone" = "magenta"),
     name = "Pollutants"
   ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
 
 airM %>%
-  # Use interaction to combine Month and Year
-  ggplot(aes(x = interaction(Month, Year, sep = "-"))) +
-  # Add Relative Humidity first (it will be drawn underneath)
-  geom_col(aes(y = RH, fill = "Relative Humidity")) + 
-  # Add temperature as a second layer (this will be drawn on top)
-  geom_col(aes(y = T, fill = "Temperature")) + 
+  pivot_longer(
+    cols = c(RH, T), 
+    names_to = "Variable", 
+    values_to = "Value"
+  ) %>%
+  ggplot(aes(x = interaction(Month, Year, sep = "-"), y = Value, fill = Variable)) +
+  geom_col(position = "dodge") +
   labs(
     title = "Temperature and Relative Humidity by Month",
     x = "Month-Year",
-    y = "Values"
+    y = "Values",
+    fill = "Variable"
   ) +
   scale_fill_manual(
-    values = c("Temperature" = "coral", 
-               "Relative Humidity" = "darkgoldenrod1"),
-    name = "Legend"
+    values = c("T" = "coral", "RH" = "darkgoldenrod1"),
+    labels = c("T" = "Temperature (°C)", "RH" = "Relative Humidity (g/m³)")
   ) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
 ```
