@@ -30,6 +30,7 @@ library(readxl)
 library(ggplot2)
 library(lubridate)
 library(tidyverse)
+library(dplyr)
 ```
 
 ### Reading Dataset
@@ -79,7 +80,7 @@ The original dataset contains 9,357 observations and 15 variables.
 
 Descriptions for variables 11-15 were not specified by the author, hence they will be omitted in the analysis. Additionally, variables will be renamed to enhance clarity.
 
-### Reformatting The Dataset 
+### Reformatting The Dataset
 
 ```{r}
 # Convert 'Date' column to y-m-d format
@@ -105,74 +106,46 @@ head(airM, 5)
 # Analysis
 
 ```{r fig.width=10, fig.height=8}
-# Plot monthly CO Concentrations
+# Plot monthly Concentrations
 airM %>%
   # Use interaction to combine Month and Year
-  ggplot(aes(x = interaction(Month, Year, sep = "-"), y = `PT08.S1(CO)`)) +
-  geom_col(fill = "skyblue") + 
-  # Adding line plot to show trend
-  geom_line(group = 1, color = "blue") +
-  # Horizontal line for mean CO
-  geom_hline(aes(yintercept = mean(airM$`PT08.S1(CO)`), color = "Mean"), linetype = "dashed") +
-  # Horizontal line for median CO
-  geom_hline(aes(yintercept = median(airM$`PT08.S1(CO)`), color = "Median"), linetype = "dashed") +
+  ggplot(aes(x = interaction(Month, Year, sep = "-"))) +
+  # Add points and lines for different pollutants
+  geom_point(aes(y = `PT08.S1(CO)`, color = "Carbon Monoxide")) + 
+  geom_line(aes(y = `PT08.S1(CO)`, color = "Carbon Monoxide", group = 1)) +
+  geom_point(aes(y = `PT08.S2(NMHC)`, color = "Non-Methane Hydrocarbon")) +
+  geom_line(aes(y = `PT08.S2(NMHC)`, color = "Non-Methane Hydrocarbon", group = 2)) +
+  geom_point(aes(y = `PT08.S3(NOx)`, color = "Nitrogen Oxide")) + 
+  geom_line(aes(y = `PT08.S3(NOx)`, color = "Nitrogen Oxide", group = 3)) +
   labs(
-    title = "Average Concentration of Carbon Monoxide by Month (2004-2005)",
+    title = "Average Concentrations of Pollutants by Month (2004-2005)",
     x = "Month-Year",
-    y = "Concentration of CO in µg/m³"
+    y = "Concentrations in µg/m³"
   ) +
   scale_color_manual(
-    values = c("Mean" = "red", "Median" = "darkgreen"),
-    labels = c("Mean CO Concentration (1046.27)", "Median CO Concentration (1047.141)"),
+    values = c("Carbon Monoxide" = "blue", 
+               "Non-Methane Hydrocarbon" = "red", 
+               "Nitrogen Oxide" = "chartreuse3"),
+    name = "Pollutants"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
+
+airM %>%
+  # Use interaction to combine Month and Year
+  ggplot(aes(x = interaction(Month, Year, sep = "-"))) +
+  # Add Relative Humidity first (it will be drawn underneath)
+  geom_col(aes(y = RH, fill = "Relative Humidity")) + 
+  # Add temperature as a second layer (this will be drawn on top)
+  geom_col(aes(y = T, fill = "Temperature")) + 
+  labs(
+    title = "Temperature and Relative Humidity by Month",
+    x = "Month-Year",
+    y = "Values"
+  ) +
+  scale_fill_manual(
+    values = c("Temperature" = "coral", 
+               "Relative Humidity" = "darkgoldenrod1"),
     name = "Legend"
   ) +
-  # Rotates the x-axis labels for readability
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-```
-
-```{r fig.width=10, fig.height=8}
-# Plot monthly Non-Methane Hydrocarbon Concentrations 
-airM %>%
-  ggplot(aes(x = interaction(Month, Year, sep = "-"), y = `PT08.S2(NMHC)`)) +
-  geom_col(fill = "pink") + 
-  geom_line(group = 1, color = "blue") +
-  geom_hline(aes(yintercept = mean(airM$`PT08.S2(NMHC)`), color = "Mean"), linetype = "dashed") +
-  geom_hline(aes(yintercept = median(airM$`PT08.S2(NMHC)`), color = "Median"), linetype = "dashed") +
-  labs(
-    title = "Average Concentration of Non-Methane Hydrocarbons by Month",
-    x = "Month-Year",
-    y = "Concentration of NMHC in µg/m³"
-  ) +
-  scale_color_manual(
-    values = c("Mean" = "red", "Median" = "darkgreen"),
-    labels = c("Mean NMHC Concentration (882.4646)", "Median NMHC Concentration (905.4681)"),
-    name = "Reference Lines"
-  ) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-```
-
-1.  `PT08.S3(NOx)`
-
-```{r fig.width=10, fig.height=8}
-# Plot monthly Nitrogen Oxide Concentrations 
-airM %>%
-  ggplot(aes(x = interaction(Month, Year, sep = "-"), y = `PT08.S3(NOx)`)) +
-  geom_col(fill = "lightcoral") + 
-  geom_line(group = 1, color = "blue") +
-  geom_hline(aes(yintercept = mean(airM$`PT08.S3(NOx)`), color = "Mean"), linetype = "dashed") +
-  geom_hline(aes(yintercept = median(airM$`PT08.S3(NOx)`), color = "Median"), linetype = "dashed") +
-  labs(
-    title = "Average Concentration of Nitrogen Oxide by Month",
-    x = "Month-Year",
-    y = "Concentration of NOx in µg/m³"
-  ) +
-  scale_color_manual(
-    values = c("Mean" = "red", "Median" = "darkgreen"),
-    labels = c("Mean NOx Concentration (806.3458)", "Median NMHC Concentration (787.5153)"),
-    name = "Reference Lines"
-  ) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-```
-
-```{r}
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
 ```
