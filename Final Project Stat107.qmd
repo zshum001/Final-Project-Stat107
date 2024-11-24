@@ -102,7 +102,7 @@ head(airM, 5)
 
 # Methodology
 
-# Analysis 
+# Analysis
 
 ```{r fig.width=10, fig.height=8}
 # Plot monthly CO Concentrations
