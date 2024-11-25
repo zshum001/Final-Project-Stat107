@@ -30,6 +30,7 @@ library(readxl)
 library(ggplot2)
 library(lubridate)
 library(tidyverse)
+library(dplyr)
 ```
 
 ### Reading Dataset
@@ -61,23 +62,111 @@ The original dataset contains 9,357 observations and 15 variables.
 
 7.  `PT08.S2(NMHC)`: Sensor measurement for NMHC concentration.
 
-8.  `NOx(GT)`: Concentration of nitrogen oxides (NOx) in the air (µg/m³).
+8.  `NOx(GT)`: Concentration of nitrogen oxide (NOx) in the air (µg/m³).
 
 9.  `PT08.S3(NOx)`: Sensor measurement for NOx concentration.
 
 10. `NO2(GT)`: Concentration of nitrogen dioxide (NO2) in the air (µg/m³).
 
-11. `PT08.S4(NO2)`: UNKNOWN
+11. `PT08.S4(NO2)`: Sensor measurement for NO2 concentration.
 
-12. `PT08.S5(03)`: UNKNOWN
+12. `PT08.S5(O3)`: Sensor measurement for ozone (O3) concentration
 
-13. `T`: UNKNOWN
+13. `T`: Temperature (Celsius)
 
-14. `RH`: UNKNOWN
+14. `RH`: Relative humidity (g/m³)
 
-15. `AH`: UNKNOWN
+15. `AH`: Absolute humidity (g/m³)
 
-Descriptions for variables 11-15 were not specified by the author, hence they will be omitted in the analysis. Additionally, variables will be renamed to enhance clarity.
+### Renaming Columns
+
+Variable columns 3-12 will be renamed as followed to enhance clarity:
+
+`CO(GT)` to `CO`
+
+`PT0.S1(CO)` to `S_CO`
+
+`NMHC(GT)` to `NMHC`
+
+`PT08.S2(NMHC)` to `S_NMHC`
+
+`C6H6(GT)` to `C6H6`
+
+`NOx(GT)` to `NOx`
+
+`PT08.S3(NOx)` to `S_NOx`
+
+`NO2(GT)` to `NO2`
+
+`PT08.S4(NO2)` to `S_NO2`
+
+`PT08.S5(O3)` to `S_O3`
+
+```{r}
+air <- air %>% 
+  rename(
+    CO = `CO(GT)`,
+    S_CO = `PT08.S1(CO)`,
+    NMHC = `NMHC(GT)`,
+    S_NMHC = `PT08.S2(NMHC)`,
+    C6H6 = `C6H6(GT)`,
+    NOx = `NOx(GT)`,
+    S_NOx = `PT08.S3(NOx)`,
+    NO2 = `NO2(GT)`,
+    S_NO2 = `PT08.S4(NO2)`,
+    S_O3 = `PT08.S5(O3)`
+  )
+```
+
+### Tidying The Dataset
+
+```{r}
+#Summarize dataset (excluding Date and Time columns)
+summary(air[, -c(1, 2)])
+```
+
+Based on the summary, it will be more helpful to implement the sensor measurements in the analyses since non-sensor measurements have negative means (which is unusual).
+
+```{r}
+# Histogram for S_CO 
+hist(air$S_CO,
+     main = "Histogram of CO concentrations",
+     xlab = "CO concentrations")
+```
+
+From graphing a histogram of, it is obvious that outlines exist. We will use variable S_CO as a starting point for tidying up the data. We will use the IQR method to identify outliers and filter them out of the dataset.
+
+```{r}
+# Calculate IQR
+Q1 <- quantile(air$S_CO, 0.25, na.rm = TRUE)
+Q3 <- quantile(air$S_CO, 0.75, na.rm = TRUE)
+IQR <- Q3 - Q1
+
+# Define outlier bounds
+lower_bound <- Q1 - 1.5 * IQR
+upper_bound <- Q3 + 1.5 * IQR
+
+# Filter rows to remove outliers
+air_filtered <- air[air$S_CO >= lower_bound & air$S_CO <= upper_bound, ]
+nrow(air)
+nrow(air_filtered)
+nrow(air) - nrow(air_filtered)
+```
+
+484 observations were removed from the dataset.
+
+```{r}
+hist(air_filtered$S_CO,
+     main = "Histogram of CO concentrations (after filtering)",
+     xlab = "CO concentrations")
+```
+
+while still positively skewed, it is a great improvement from the previous graph
+
+```{r}
+# Reassign original dataset with filtered dataset
+air <- air_filtered
+```
 
 ### Reformatting The Dataset
 
@@ -103,76 +192,3 @@ head(airM, 5)
 # Methodology
 
 # Analysis
-
-```{r fig.width=10, fig.height=8}
-# Plot monthly CO Concentrations
-airM %>%
-  # Use interaction to combine Month and Year
-  ggplot(aes(x = interaction(Month, Year, sep = "-"), y = `PT08.S1(CO)`)) +
-  geom_col(fill = "skyblue") + 
-  # Adding line plot to show trend
-  geom_line(group = 1, color = "blue") +
-  # Horizontal line for mean CO
-  geom_hline(aes(yintercept = mean(airM$`PT08.S1(CO)`), color = "Mean"), linetype = "dashed") +
-  # Horizontal line for median CO
-  geom_hline(aes(yintercept = median(airM$`PT08.S1(CO)`), color = "Median"), linetype = "dashed") +
-  labs(
-    title = "Average Concentration of Carbon Monoxide by Month (2004-2005)",
-    x = "Month-Year",
-    y = "Concentration of CO in µg/m³"
-  ) +
-  scale_color_manual(
-    values = c("Mean" = "red", "Median" = "darkgreen"),
-    labels = c("Mean CO Concentration (1046.27)", "Median CO Concentration (1047.141)"),
-    name = "Legend"
-  ) +
-  # Rotates the x-axis labels for readability
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-```
-
-```{r fig.width=10, fig.height=8}
-# Plot monthly Non-Methane Hydrocarbon Concentrations 
-airM %>%
-  ggplot(aes(x = interaction(Month, Year, sep = "-"), y = `PT08.S2(NMHC)`)) +
-  geom_col(fill = "pink") + 
-  geom_line(group = 1, color = "blue") +
-  geom_hline(aes(yintercept = mean(airM$`PT08.S2(NMHC)`), color = "Mean"), linetype = "dashed") +
-  geom_hline(aes(yintercept = median(airM$`PT08.S2(NMHC)`), color = "Median"), linetype = "dashed") +
-  labs(
-    title = "Average Concentration of Non-Methane Hydrocarbons by Month",
-    x = "Month-Year",
-    y = "Concentration of NMHC in µg/m³"
-  ) +
-  scale_color_manual(
-    values = c("Mean" = "red", "Median" = "darkgreen"),
-    labels = c("Mean NMHC Concentration (882.4646)", "Median NMHC Concentration (905.4681)"),
-    name = "Reference Lines"
-  ) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-```
-
-1.  `PT08.S3(NOx)`
-
-```{r fig.width=10, fig.height=8}
-# Plot monthly Nitrogen Oxide Concentrations 
-airM %>%
-  ggplot(aes(x = interaction(Month, Year, sep = "-"), y = `PT08.S3(NOx)`)) +
-  geom_col(fill = "lightcoral") + 
-  geom_line(group = 1, color = "blue") +
-  geom_hline(aes(yintercept = mean(airM$`PT08.S3(NOx)`), color = "Mean"), linetype = "dashed") +
-  geom_hline(aes(yintercept = median(airM$`PT08.S3(NOx)`), color = "Median"), linetype = "dashed") +
-  labs(
-    title = "Average Concentration of Nitrogen Oxide by Month",
-    x = "Month-Year",
-    y = "Concentration of NOx in µg/m³"
-  ) +
-  scale_color_manual(
-    values = c("Mean" = "red", "Median" = "darkgreen"),
-    labels = c("Mean NOx Concentration (806.3458)", "Median NMHC Concentration (787.5153)"),
-    name = "Reference Lines"
-  ) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-```
-
-```{r}
-```
