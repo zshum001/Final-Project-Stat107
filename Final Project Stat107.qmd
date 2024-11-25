@@ -192,3 +192,55 @@ head(airM, 5)
 # Methodology
 
 # Analysis
+
+```{r fig.width=10, fig.height=8}
+# Plot monthly Concentrations
+airM %>%
+  # Use interaction to combine Month and Year
+  ggplot(aes(x = interaction(Month, Year, sep = "-"))) +
+  # Add points and lines for different pollutants
+  geom_point(aes(y = S_CO, color = "Carbon Monoxide")) + 
+  geom_line(aes(y = S_CO, color = "Carbon Monoxide", group = 1)) +
+  geom_point(aes(y = S_NMHC, color = "Non-Methane Hydrocarbon")) +
+  geom_line(aes(y = S_NMHC, color = "Non-Methane Hydrocarbon", group = 2)) +
+  geom_point(aes(y = S_NOx, color = "Nitrogen Oxide")) + 
+  geom_line(aes(y = S_NOx, color = "Nitrogen Oxide", group = 3)) +
+  geom_point(aes(y = S_NO2, color = "Nitrogen Dioxide")) + 
+  geom_line(aes(y = S_NO2, color = "Nitrogen Dioxide", group = 3)) +
+  geom_point(aes(y = S_O3, color = "Ozone")) + 
+  geom_line(aes(y = S_O3, color = "Ozone", group = 3)) +
+  labs(
+    title = "Average Concentrations of Pollutants by Month (2004-2005)",
+    x = "Month-Year",
+    y = "Concentrations in µg/m³"
+  ) +
+  scale_color_manual(
+    values = c("Carbon Monoxide" = "blue", 
+               "Non-Methane Hydrocarbon" = "red", 
+               "Nitrogen Oxide" = "chartreuse3",
+               "Nitrogen Dioxide" = "purple",
+               "Ozone" = "magenta"),
+    name = "Pollutants"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
+
+airM %>%
+  pivot_longer(
+    cols = c(RH, T), 
+    names_to = "Variable", 
+    values_to = "Value"
+  ) %>%
+  ggplot(aes(x = interaction(Month, Year, sep = "-"), y = Value, fill = Variable)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "Temperature and Relative Humidity by Month",
+    x = "Month-Year",
+    y = "Values",
+    fill = "Variable"
+  ) +
+  scale_fill_manual(
+    values = c("T" = "coral", "RH" = "darkgoldenrod1"),
+    labels = c("T" = "Temperature (°C)", "RH" = "Relative Humidity (g/m³)")
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
