@@ -78,7 +78,7 @@ The original dataset contains 9,357 observations and 15 variables.
 
 15. `AH`: Absolute humidity (g/m³)
 
-### Renaming Columns 
+### Renaming Columns
 
 Variable columns 3-12 will be renamed as followed to enhance clarity:
 
