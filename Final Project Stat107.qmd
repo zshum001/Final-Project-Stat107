@@ -36,14 +36,9 @@ library(dplyr)
 ### Reading Dataset
 
 ```{r}
+#| code-fold: true
 air <- read_excel("AirQualityUCI.xls")
 head(air)
-
-# Number of rows and columns
-dim(air)
-
-# Column names
-colnames(air)
 ```
 
 The original dataset contains 9,357 observations and 15 variables.
@@ -82,6 +77,23 @@ The original dataset contains 9,357 observations and 15 variables.
 
 Variable columns 3-12 will be renamed as followed to enhance clarity:
 
+```{r}
+#| code-fold: true
+air <- air %>% 
+  rename(
+    CO = `CO(GT)`,
+    S_CO = `PT08.S1(CO)`,
+    NMHC = `NMHC(GT)`,
+    S_NMHC = `PT08.S2(NMHC)`,
+    C6H6 = `C6H6(GT)`,
+    NOx = `NOx(GT)`,
+    S_NOx = `PT08.S3(NOx)`,
+    NO2 = `NO2(GT)`,
+    S_NO2 = `PT08.S4(NO2)`,
+    S_O3 = `PT08.S5(O3)`
+  )
+```
+
 `CO(GT)` to `CO`
 
 `PT0.S1(CO)` to `S_CO`
@@ -102,25 +114,10 @@ Variable columns 3-12 will be renamed as followed to enhance clarity:
 
 `PT08.S5(O3)` to `S_O3`
 
-```{r}
-air <- air %>% 
-  rename(
-    CO = `CO(GT)`,
-    S_CO = `PT08.S1(CO)`,
-    NMHC = `NMHC(GT)`,
-    S_NMHC = `PT08.S2(NMHC)`,
-    C6H6 = `C6H6(GT)`,
-    NOx = `NOx(GT)`,
-    S_NOx = `PT08.S3(NOx)`,
-    NO2 = `NO2(GT)`,
-    S_NO2 = `PT08.S4(NO2)`,
-    S_O3 = `PT08.S5(O3)`
-  )
-```
-
 ### Tidying The Dataset
 
 ```{r}
+#| code-fold: true
 #Summarize dataset (excluding Date and Time columns)
 summary(air[, -c(1, 2)])
 ```
@@ -128,6 +125,7 @@ summary(air[, -c(1, 2)])
 Based on the summary, it will be more helpful to implement the sensor measurements in the analyses since non-sensor measurements have negative means (which is unusual).
 
 ```{r}
+#| code-fold: true
 # Histogram for S_CO 
 hist(air$S_CO,
      main = "Histogram of CO concentrations",
@@ -137,6 +135,7 @@ hist(air$S_CO,
 From graphing a histogram of, it is obvious that outlines exist. We will use variable S_CO as a starting point for tidying up the data. We will use the IQR method to identify outliers and filter them out of the dataset.
 
 ```{r}
+#| code-fold: true
 # Calculate IQR
 Q1 <- quantile(air$S_CO, 0.25, na.rm = TRUE)
 Q3 <- quantile(air$S_CO, 0.75, na.rm = TRUE)
@@ -156,6 +155,7 @@ nrow(air) - nrow(air_filtered)
 484 observations were removed from the dataset.
 
 ```{r}
+#| code-fold: true
 hist(air_filtered$S_CO,
      main = "Histogram of CO concentrations (after filtering)",
      xlab = "CO concentrations")
@@ -164,6 +164,7 @@ hist(air_filtered$S_CO,
 while still positively skewed, it is a great improvement from the previous graph
 
 ```{r}
+#| code-fold: true
 # Reassign original dataset with filtered dataset
 air <- air_filtered
 ```
@@ -171,6 +172,7 @@ air <- air_filtered
 ### Reformatting The Dataset
 
 ```{r}
+#| code-fold: true
 # Convert 'Date' column to y-m-d format
 air$Date <- ymd(air$Date)
 
@@ -194,6 +196,7 @@ head(airM, 5)
 # Analysis
 
 ```{r fig.width=10, fig.height=8}
+#| code-fold: true
 # Plot monthly Concentrations
 airM %>%
   # Use interaction to combine Month and Year
@@ -243,4 +246,8 @@ airM %>%
     labels = c("T" = "Temperature (°C)", "RH" = "Relative Humidity (g/m³)")
   ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+
 ```
