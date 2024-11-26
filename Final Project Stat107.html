@@ -3179,8 +3179,11 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 <section id="reading-dataset" class="level3">
 <h3 class="anchored" data-anchor-id="reading-dataset">Reading Dataset</h3>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>air <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;AirQualityUCI.xls&quot;</span>)</span>
 <span id="cb8-2"><a href="#cb8-2"></a><span class="fu">head</span>(air)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 15
   Date                Time                `CO(GT)` `PT08.S1(CO)` `NMHC(GT)`
@@ -3194,19 +3197,6 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 # ℹ 10 more variables: `C6H6(GT)` &lt;dbl&gt;, `PT08.S2(NMHC)` &lt;dbl&gt;,
 #   `NOx(GT)` &lt;dbl&gt;, `PT08.S3(NOx)` &lt;dbl&gt;, `NO2(GT)` &lt;dbl&gt;,
 #   `PT08.S4(NO2)` &lt;dbl&gt;, `PT08.S5(O3)` &lt;dbl&gt;, T &lt;dbl&gt;, RH &lt;dbl&gt;, AH &lt;dbl&gt;</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Number of rows and columns</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="fu">dim</span>(air)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 9357   15</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Column names</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="fu">colnames</span>(air)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] &quot;Date&quot;          &quot;Time&quot;          &quot;CO(GT)&quot;        &quot;PT08.S1(CO)&quot;  
- [5] &quot;NMHC(GT)&quot;      &quot;C6H6(GT)&quot;      &quot;PT08.S2(NMHC)&quot; &quot;NOx(GT)&quot;      
- [9] &quot;PT08.S3(NOx)&quot;  &quot;NO2(GT)&quot;       &quot;PT08.S4(NO2)&quot;  &quot;PT08.S5(O3)&quot;  
-[13] &quot;T&quot;             &quot;RH&quot;            &quot;AH&quot;           </code></pre>
 </div>
 </div>
 <p>The original dataset contains 9,357 observations and 15 variables.</p>
@@ -3231,6 +3221,24 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 <section id="renaming-columns" class="level3">
 <h3 class="anchored" data-anchor-id="renaming-columns">Renaming Columns</h3>
 <p>Variable columns 3-12 will be renamed as followed to enhance clarity:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>air <span class="ot">&lt;-</span> air <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2"></a>  <span class="fu">rename</span>(</span>
+<span id="cb10-3"><a href="#cb10-3"></a>    <span class="at">CO =</span> <span class="st">`</span><span class="at">CO(GT)</span><span class="st">`</span>,</span>
+<span id="cb10-4"><a href="#cb10-4"></a>    <span class="at">S_CO =</span> <span class="st">`</span><span class="at">PT08.S1(CO)</span><span class="st">`</span>,</span>
+<span id="cb10-5"><a href="#cb10-5"></a>    <span class="at">NMHC =</span> <span class="st">`</span><span class="at">NMHC(GT)</span><span class="st">`</span>,</span>
+<span id="cb10-6"><a href="#cb10-6"></a>    <span class="at">S_NMHC =</span> <span class="st">`</span><span class="at">PT08.S2(NMHC)</span><span class="st">`</span>,</span>
+<span id="cb10-7"><a href="#cb10-7"></a>    <span class="at">C6H6 =</span> <span class="st">`</span><span class="at">C6H6(GT)</span><span class="st">`</span>,</span>
+<span id="cb10-8"><a href="#cb10-8"></a>    <span class="at">NOx =</span> <span class="st">`</span><span class="at">NOx(GT)</span><span class="st">`</span>,</span>
+<span id="cb10-9"><a href="#cb10-9"></a>    <span class="at">S_NOx =</span> <span class="st">`</span><span class="at">PT08.S3(NOx)</span><span class="st">`</span>,</span>
+<span id="cb10-10"><a href="#cb10-10"></a>    <span class="at">NO2 =</span> <span class="st">`</span><span class="at">NO2(GT)</span><span class="st">`</span>,</span>
+<span id="cb10-11"><a href="#cb10-11"></a>    <span class="at">S_NO2 =</span> <span class="st">`</span><span class="at">PT08.S4(NO2)</span><span class="st">`</span>,</span>
+<span id="cb10-12"><a href="#cb10-12"></a>    <span class="at">S_O3 =</span> <span class="st">`</span><span class="at">PT08.S5(O3)</span><span class="st">`</span></span>
+<span id="cb10-13"><a href="#cb10-13"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <p><code>CO(GT)</code> to <code>CO</code></p>
 <p><code>PT0.S1(CO)</code> to <code>S_CO</code></p>
 <p><code>NMHC(GT)</code> to <code>NMHC</code></p>
@@ -3241,27 +3249,15 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 <p><code>NO2(GT)</code> to <code>NO2</code></p>
 <p><code>PT08.S4(NO2)</code> to <code>S_NO2</code></p>
 <p><code>PT08.S5(O3)</code> to <code>S_O3</code></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>air <span class="ot">&lt;-</span> air <span class="sc">%&gt;%</span> </span>
-<span id="cb14-2"><a href="#cb14-2"></a>  <span class="fu">rename</span>(</span>
-<span id="cb14-3"><a href="#cb14-3"></a>    <span class="at">CO =</span> <span class="st">`</span><span class="at">CO(GT)</span><span class="st">`</span>,</span>
-<span id="cb14-4"><a href="#cb14-4"></a>    <span class="at">S_CO =</span> <span class="st">`</span><span class="at">PT08.S1(CO)</span><span class="st">`</span>,</span>
-<span id="cb14-5"><a href="#cb14-5"></a>    <span class="at">NMHC =</span> <span class="st">`</span><span class="at">NMHC(GT)</span><span class="st">`</span>,</span>
-<span id="cb14-6"><a href="#cb14-6"></a>    <span class="at">S_NMHC =</span> <span class="st">`</span><span class="at">PT08.S2(NMHC)</span><span class="st">`</span>,</span>
-<span id="cb14-7"><a href="#cb14-7"></a>    <span class="at">C6H6 =</span> <span class="st">`</span><span class="at">C6H6(GT)</span><span class="st">`</span>,</span>
-<span id="cb14-8"><a href="#cb14-8"></a>    <span class="at">NOx =</span> <span class="st">`</span><span class="at">NOx(GT)</span><span class="st">`</span>,</span>
-<span id="cb14-9"><a href="#cb14-9"></a>    <span class="at">S_NOx =</span> <span class="st">`</span><span class="at">PT08.S3(NOx)</span><span class="st">`</span>,</span>
-<span id="cb14-10"><a href="#cb14-10"></a>    <span class="at">NO2 =</span> <span class="st">`</span><span class="at">NO2(GT)</span><span class="st">`</span>,</span>
-<span id="cb14-11"><a href="#cb14-11"></a>    <span class="at">S_NO2 =</span> <span class="st">`</span><span class="at">PT08.S4(NO2)</span><span class="st">`</span>,</span>
-<span id="cb14-12"><a href="#cb14-12"></a>    <span class="at">S_O3 =</span> <span class="st">`</span><span class="at">PT08.S5(O3)</span><span class="st">`</span></span>
-<span id="cb14-13"><a href="#cb14-13"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 </section>
 <section id="tidying-the-dataset" class="level3">
 <h3 class="anchored" data-anchor-id="tidying-the-dataset">Tidying The Dataset</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co">#Summarize dataset (excluding Date and Time columns)</span></span>
-<span id="cb15-2"><a href="#cb15-2"></a><span class="fu">summary</span>(air[, <span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co">#Summarize dataset (excluding Date and Time columns)</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="fu">summary</span>(air[, <span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>       CO               S_CO           NMHC             C6H6         
  Min.   :-200.00   Min.   :-200   Min.   :-200.0   Min.   :-200.000  
@@ -3295,10 +3291,13 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 </div>
 <p>Based on the summary, it will be more helpful to implement the sensor measurements in the analyses since non-sensor measurements have negative means (which is unusual).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Histogram for S_CO </span></span>
-<span id="cb17-2"><a href="#cb17-2"></a><span class="fu">hist</span>(air<span class="sc">$</span>S_CO,</span>
-<span id="cb17-3"><a href="#cb17-3"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of CO concentrations&quot;</span>,</span>
-<span id="cb17-4"><a href="#cb17-4"></a>     <span class="at">xlab =</span> <span class="st">&quot;CO concentrations&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># Histogram for S_CO </span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="fu">hist</span>(air<span class="sc">$</span>S_CO,</span>
+<span id="cb13-3"><a href="#cb13-3"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of CO concentrations&quot;</span>,</span>
+<span id="cb13-4"><a href="#cb13-4"></a>     <span class="at">xlab =</span> <span class="st">&quot;CO concentrations&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3309,35 +3308,47 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 </div>
 <p>From graphing a histogram of, it is obvious that outlines exist. We will use variable S_CO as a starting point for tidying up the data. We will use the IQR method to identify outliers and filter them out of the dataset.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Calculate IQR</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a>Q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(air<span class="sc">$</span>S_CO, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb18-3"><a href="#cb18-3"></a>Q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(air<span class="sc">$</span>S_CO, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb18-4"><a href="#cb18-4"></a>IQR <span class="ot">&lt;-</span> Q3 <span class="sc">-</span> Q1</span>
-<span id="cb18-5"><a href="#cb18-5"></a></span>
-<span id="cb18-6"><a href="#cb18-6"></a><span class="co"># Define outlier bounds</span></span>
-<span id="cb18-7"><a href="#cb18-7"></a>lower_bound <span class="ot">&lt;-</span> Q1 <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR</span>
-<span id="cb18-8"><a href="#cb18-8"></a>upper_bound <span class="ot">&lt;-</span> Q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR</span>
-<span id="cb18-9"><a href="#cb18-9"></a></span>
-<span id="cb18-10"><a href="#cb18-10"></a><span class="co"># Filter rows to remove outliers</span></span>
-<span id="cb18-11"><a href="#cb18-11"></a>air_filtered <span class="ot">&lt;-</span> air[air<span class="sc">$</span>S_CO <span class="sc">&gt;=</span> lower_bound <span class="sc">&amp;</span> air<span class="sc">$</span>S_CO <span class="sc">&lt;=</span> upper_bound, ]</span>
-<span id="cb18-12"><a href="#cb18-12"></a><span class="fu">nrow</span>(air)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># Calculate IQR</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>Q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(air<span class="sc">$</span>S_CO, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-3"><a href="#cb14-3"></a>Q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(air<span class="sc">$</span>S_CO, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-4"><a href="#cb14-4"></a>IQR <span class="ot">&lt;-</span> Q3 <span class="sc">-</span> Q1</span>
+<span id="cb14-5"><a href="#cb14-5"></a></span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="co"># Define outlier bounds</span></span>
+<span id="cb14-7"><a href="#cb14-7"></a>lower_bound <span class="ot">&lt;-</span> Q1 <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR</span>
+<span id="cb14-8"><a href="#cb14-8"></a>upper_bound <span class="ot">&lt;-</span> Q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR</span>
+<span id="cb14-9"><a href="#cb14-9"></a></span>
+<span id="cb14-10"><a href="#cb14-10"></a><span class="co"># Filter rows to remove outliers</span></span>
+<span id="cb14-11"><a href="#cb14-11"></a>air_filtered <span class="ot">&lt;-</span> air[air<span class="sc">$</span>S_CO <span class="sc">&gt;=</span> lower_bound <span class="sc">&amp;</span> air<span class="sc">$</span>S_CO <span class="sc">&lt;=</span> upper_bound, ]</span>
+<span id="cb14-12"><a href="#cb14-12"></a><span class="fu">nrow</span>(air)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 9357</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">nrow</span>(air_filtered)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="fu">nrow</span>(air_filtered)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 8873</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="fu">nrow</span>(air) <span class="sc">-</span> <span class="fu">nrow</span>(air_filtered)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="fu">nrow</span>(air) <span class="sc">-</span> <span class="fu">nrow</span>(air_filtered)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 484</code></pre>
 </div>
 </div>
 <p>484 observations were removed from the dataset.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="fu">hist</span>(air_filtered<span class="sc">$</span>S_CO,</span>
-<span id="cb24-2"><a href="#cb24-2"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of CO concentrations (after filtering)&quot;</span>,</span>
-<span id="cb24-3"><a href="#cb24-3"></a>     <span class="at">xlab =</span> <span class="st">&quot;CO concentrations&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">hist</span>(air_filtered<span class="sc">$</span>S_CO,</span>
+<span id="cb20-2"><a href="#cb20-2"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of CO concentrations (after filtering)&quot;</span>,</span>
+<span id="cb20-3"><a href="#cb20-3"></a>     <span class="at">xlab =</span> <span class="st">&quot;CO concentrations&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3348,32 +3359,41 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 </div>
 <p>while still positively skewed, it is a great improvement from the previous graph</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># Reassign original dataset with filtered dataset</span></span>
-<span id="cb25-2"><a href="#cb25-2"></a>air <span class="ot">&lt;-</span> air_filtered</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># Reassign original dataset with filtered dataset</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>air <span class="ot">&lt;-</span> air_filtered</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 <section id="reformatting-the-dataset" class="level3">
 <h3 class="anchored" data-anchor-id="reformatting-the-dataset">Reformatting The Dataset</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="co"># Convert &#39;Date&#39; column to y-m-d format</span></span>
-<span id="cb26-2"><a href="#cb26-2"></a>air<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">ymd</span>(air<span class="sc">$</span>Date)</span>
-<span id="cb26-3"><a href="#cb26-3"></a></span>
-<span id="cb26-4"><a href="#cb26-4"></a><span class="co"># Create numerical Month and Year columns</span></span>
-<span id="cb26-5"><a href="#cb26-5"></a>air <span class="ot">&lt;-</span> air <span class="sc">%&gt;%</span></span>
-<span id="cb26-6"><a href="#cb26-6"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb26-7"><a href="#cb26-7"></a>    <span class="at">Month =</span> <span class="fu">month</span>(Date, <span class="at">label =</span> <span class="cn">TRUE</span>), <span class="co"># Extracts month as a numeric value (1-12)</span></span>
-<span id="cb26-8"><a href="#cb26-8"></a>    <span class="at">Year =</span> <span class="fu">year</span>(Date)    <span class="co"># Extracts year</span></span>
-<span id="cb26-9"><a href="#cb26-9"></a>  )</span>
-<span id="cb26-10"><a href="#cb26-10"></a></span>
-<span id="cb26-11"><a href="#cb26-11"></a><span class="co"># Group by Year and Month for summarization</span></span>
-<span id="cb26-12"><a href="#cb26-12"></a>airM <span class="ot">&lt;-</span> air <span class="sc">%&gt;%</span></span>
-<span id="cb26-13"><a href="#cb26-13"></a>  <span class="fu">group_by</span>(Year, Month) <span class="sc">%&gt;%</span></span>
-<span id="cb26-14"><a href="#cb26-14"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span><span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Convert &#39;Date&#39; column to y-m-d format</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a>air<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">ymd</span>(air<span class="sc">$</span>Date)</span>
+<span id="cb22-3"><a href="#cb22-3"></a></span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="co"># Create numerical Month and Year columns</span></span>
+<span id="cb22-5"><a href="#cb22-5"></a>air <span class="ot">&lt;-</span> air <span class="sc">%&gt;%</span></span>
+<span id="cb22-6"><a href="#cb22-6"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb22-7"><a href="#cb22-7"></a>    <span class="at">Month =</span> <span class="fu">month</span>(Date, <span class="at">label =</span> <span class="cn">TRUE</span>), <span class="co"># Extracts month as a numeric value (1-12)</span></span>
+<span id="cb22-8"><a href="#cb22-8"></a>    <span class="at">Year =</span> <span class="fu">year</span>(Date)    <span class="co"># Extracts year</span></span>
+<span id="cb22-9"><a href="#cb22-9"></a>  )</span>
+<span id="cb22-10"><a href="#cb22-10"></a></span>
+<span id="cb22-11"><a href="#cb22-11"></a><span class="co"># Group by Year and Month for summarization</span></span>
+<span id="cb22-12"><a href="#cb22-12"></a>airM <span class="ot">&lt;-</span> air <span class="sc">%&gt;%</span></span>
+<span id="cb22-13"><a href="#cb22-13"></a>  <span class="fu">group_by</span>(Year, Month) <span class="sc">%&gt;%</span></span>
+<span id="cb22-14"><a href="#cb22-14"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span><span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>`summarise()` has grouped output by &#39;Year&#39;. You can override using the
 `.groups` argument.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="fu">head</span>(airM, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="fu">head</span>(airM, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 15
 # Groups:   Year [1]
@@ -3396,35 +3416,38 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 <section id="analysis" class="level1">
 <h1>Analysis</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="co"># Plot monthly Concentrations</span></span>
-<span id="cb30-2"><a href="#cb30-2"></a>airM <span class="sc">%&gt;%</span></span>
-<span id="cb30-3"><a href="#cb30-3"></a>  <span class="co"># Use interaction to combine Month and Year</span></span>
-<span id="cb30-4"><a href="#cb30-4"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">interaction</span>(Month, Year, <span class="at">sep =</span> <span class="st">&quot;-&quot;</span>))) <span class="sc">+</span></span>
-<span id="cb30-5"><a href="#cb30-5"></a>  <span class="co"># Add points and lines for different pollutants</span></span>
-<span id="cb30-6"><a href="#cb30-6"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_CO, <span class="at">color =</span> <span class="st">&quot;Carbon Monoxide&quot;</span>)) <span class="sc">+</span> </span>
-<span id="cb30-7"><a href="#cb30-7"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_CO, <span class="at">color =</span> <span class="st">&quot;Carbon Monoxide&quot;</span>, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb30-8"><a href="#cb30-8"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_NMHC, <span class="at">color =</span> <span class="st">&quot;Non-Methane Hydrocarbon&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb30-9"><a href="#cb30-9"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_NMHC, <span class="at">color =</span> <span class="st">&quot;Non-Methane Hydrocarbon&quot;</span>, <span class="at">group =</span> <span class="dv">2</span>)) <span class="sc">+</span></span>
-<span id="cb30-10"><a href="#cb30-10"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_NOx, <span class="at">color =</span> <span class="st">&quot;Nitrogen Oxide&quot;</span>)) <span class="sc">+</span> </span>
-<span id="cb30-11"><a href="#cb30-11"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_NOx, <span class="at">color =</span> <span class="st">&quot;Nitrogen Oxide&quot;</span>, <span class="at">group =</span> <span class="dv">3</span>)) <span class="sc">+</span></span>
-<span id="cb30-12"><a href="#cb30-12"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_NO2, <span class="at">color =</span> <span class="st">&quot;Nitrogen Dioxide&quot;</span>)) <span class="sc">+</span> </span>
-<span id="cb30-13"><a href="#cb30-13"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_NO2, <span class="at">color =</span> <span class="st">&quot;Nitrogen Dioxide&quot;</span>, <span class="at">group =</span> <span class="dv">3</span>)) <span class="sc">+</span></span>
-<span id="cb30-14"><a href="#cb30-14"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_O3, <span class="at">color =</span> <span class="st">&quot;Ozone&quot;</span>)) <span class="sc">+</span> </span>
-<span id="cb30-15"><a href="#cb30-15"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_O3, <span class="at">color =</span> <span class="st">&quot;Ozone&quot;</span>, <span class="at">group =</span> <span class="dv">3</span>)) <span class="sc">+</span></span>
-<span id="cb30-16"><a href="#cb30-16"></a>  <span class="fu">labs</span>(</span>
-<span id="cb30-17"><a href="#cb30-17"></a>    <span class="at">title =</span> <span class="st">&quot;Average Concentrations of Pollutants by Month (2004-2005)&quot;</span>,</span>
-<span id="cb30-18"><a href="#cb30-18"></a>    <span class="at">x =</span> <span class="st">&quot;Month-Year&quot;</span>,</span>
-<span id="cb30-19"><a href="#cb30-19"></a>    <span class="at">y =</span> <span class="st">&quot;Concentrations in µg/m³&quot;</span></span>
-<span id="cb30-20"><a href="#cb30-20"></a>  ) <span class="sc">+</span></span>
-<span id="cb30-21"><a href="#cb30-21"></a>  <span class="fu">scale_color_manual</span>(</span>
-<span id="cb30-22"><a href="#cb30-22"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Carbon Monoxide&quot;</span> <span class="ot">=</span> <span class="st">&quot;blue&quot;</span>, </span>
-<span id="cb30-23"><a href="#cb30-23"></a>               <span class="st">&quot;Non-Methane Hydrocarbon&quot;</span> <span class="ot">=</span> <span class="st">&quot;red&quot;</span>, </span>
-<span id="cb30-24"><a href="#cb30-24"></a>               <span class="st">&quot;Nitrogen Oxide&quot;</span> <span class="ot">=</span> <span class="st">&quot;chartreuse3&quot;</span>,</span>
-<span id="cb30-25"><a href="#cb30-25"></a>               <span class="st">&quot;Nitrogen Dioxide&quot;</span> <span class="ot">=</span> <span class="st">&quot;purple&quot;</span>,</span>
-<span id="cb30-26"><a href="#cb30-26"></a>               <span class="st">&quot;Ozone&quot;</span> <span class="ot">=</span> <span class="st">&quot;magenta&quot;</span>),</span>
-<span id="cb30-27"><a href="#cb30-27"></a>    <span class="at">name =</span> <span class="st">&quot;Pollutants&quot;</span></span>
-<span id="cb30-28"><a href="#cb30-28"></a>  ) <span class="sc">+</span></span>
-<span id="cb30-29"><a href="#cb30-29"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))  <span class="co"># Rotate x-axis labels</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="co"># Plot monthly Concentrations</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a>airM <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3"></a>  <span class="co"># Use interaction to combine Month and Year</span></span>
+<span id="cb26-4"><a href="#cb26-4"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">interaction</span>(Month, Year, <span class="at">sep =</span> <span class="st">&quot;-&quot;</span>))) <span class="sc">+</span></span>
+<span id="cb26-5"><a href="#cb26-5"></a>  <span class="co"># Add points and lines for different pollutants</span></span>
+<span id="cb26-6"><a href="#cb26-6"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_CO, <span class="at">color =</span> <span class="st">&quot;Carbon Monoxide&quot;</span>)) <span class="sc">+</span> </span>
+<span id="cb26-7"><a href="#cb26-7"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_CO, <span class="at">color =</span> <span class="st">&quot;Carbon Monoxide&quot;</span>, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb26-8"><a href="#cb26-8"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_NMHC, <span class="at">color =</span> <span class="st">&quot;Non-Methane Hydrocarbon&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb26-9"><a href="#cb26-9"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_NMHC, <span class="at">color =</span> <span class="st">&quot;Non-Methane Hydrocarbon&quot;</span>, <span class="at">group =</span> <span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb26-10"><a href="#cb26-10"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_NOx, <span class="at">color =</span> <span class="st">&quot;Nitrogen Oxide&quot;</span>)) <span class="sc">+</span> </span>
+<span id="cb26-11"><a href="#cb26-11"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_NOx, <span class="at">color =</span> <span class="st">&quot;Nitrogen Oxide&quot;</span>, <span class="at">group =</span> <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb26-12"><a href="#cb26-12"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_NO2, <span class="at">color =</span> <span class="st">&quot;Nitrogen Dioxide&quot;</span>)) <span class="sc">+</span> </span>
+<span id="cb26-13"><a href="#cb26-13"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_NO2, <span class="at">color =</span> <span class="st">&quot;Nitrogen Dioxide&quot;</span>, <span class="at">group =</span> <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb26-14"><a href="#cb26-14"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_O3, <span class="at">color =</span> <span class="st">&quot;Ozone&quot;</span>)) <span class="sc">+</span> </span>
+<span id="cb26-15"><a href="#cb26-15"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> S_O3, <span class="at">color =</span> <span class="st">&quot;Ozone&quot;</span>, <span class="at">group =</span> <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb26-16"><a href="#cb26-16"></a>  <span class="fu">labs</span>(</span>
+<span id="cb26-17"><a href="#cb26-17"></a>    <span class="at">title =</span> <span class="st">&quot;Average Concentrations of Pollutants by Month (2004-2005)&quot;</span>,</span>
+<span id="cb26-18"><a href="#cb26-18"></a>    <span class="at">x =</span> <span class="st">&quot;Month-Year&quot;</span>,</span>
+<span id="cb26-19"><a href="#cb26-19"></a>    <span class="at">y =</span> <span class="st">&quot;Concentrations in µg/m³&quot;</span></span>
+<span id="cb26-20"><a href="#cb26-20"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-21"><a href="#cb26-21"></a>  <span class="fu">scale_color_manual</span>(</span>
+<span id="cb26-22"><a href="#cb26-22"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Carbon Monoxide&quot;</span> <span class="ot">=</span> <span class="st">&quot;blue&quot;</span>, </span>
+<span id="cb26-23"><a href="#cb26-23"></a>               <span class="st">&quot;Non-Methane Hydrocarbon&quot;</span> <span class="ot">=</span> <span class="st">&quot;red&quot;</span>, </span>
+<span id="cb26-24"><a href="#cb26-24"></a>               <span class="st">&quot;Nitrogen Oxide&quot;</span> <span class="ot">=</span> <span class="st">&quot;chartreuse3&quot;</span>,</span>
+<span id="cb26-25"><a href="#cb26-25"></a>               <span class="st">&quot;Nitrogen Dioxide&quot;</span> <span class="ot">=</span> <span class="st">&quot;purple&quot;</span>,</span>
+<span id="cb26-26"><a href="#cb26-26"></a>               <span class="st">&quot;Ozone&quot;</span> <span class="ot">=</span> <span class="st">&quot;magenta&quot;</span>),</span>
+<span id="cb26-27"><a href="#cb26-27"></a>    <span class="at">name =</span> <span class="st">&quot;Pollutants&quot;</span></span>
+<span id="cb26-28"><a href="#cb26-28"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-29"><a href="#cb26-29"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))  <span class="co"># Rotate x-axis labels</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -3432,25 +3455,28 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>airM <span class="sc">%&gt;%</span></span>
-<span id="cb31-2"><a href="#cb31-2"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb31-3"><a href="#cb31-3"></a>    <span class="at">cols =</span> <span class="fu">c</span>(RH, T), </span>
-<span id="cb31-4"><a href="#cb31-4"></a>    <span class="at">names_to =</span> <span class="st">&quot;Variable&quot;</span>, </span>
-<span id="cb31-5"><a href="#cb31-5"></a>    <span class="at">values_to =</span> <span class="st">&quot;Value&quot;</span></span>
-<span id="cb31-6"><a href="#cb31-6"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb31-7"><a href="#cb31-7"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">interaction</span>(Month, Year, <span class="at">sep =</span> <span class="st">&quot;-&quot;</span>), <span class="at">y =</span> Value, <span class="at">fill =</span> Variable)) <span class="sc">+</span></span>
-<span id="cb31-8"><a href="#cb31-8"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="sc">+</span></span>
-<span id="cb31-9"><a href="#cb31-9"></a>  <span class="fu">labs</span>(</span>
-<span id="cb31-10"><a href="#cb31-10"></a>    <span class="at">title =</span> <span class="st">&quot;Temperature and Relative Humidity by Month&quot;</span>,</span>
-<span id="cb31-11"><a href="#cb31-11"></a>    <span class="at">x =</span> <span class="st">&quot;Month-Year&quot;</span>,</span>
-<span id="cb31-12"><a href="#cb31-12"></a>    <span class="at">y =</span> <span class="st">&quot;Values&quot;</span>,</span>
-<span id="cb31-13"><a href="#cb31-13"></a>    <span class="at">fill =</span> <span class="st">&quot;Variable&quot;</span></span>
-<span id="cb31-14"><a href="#cb31-14"></a>  ) <span class="sc">+</span></span>
-<span id="cb31-15"><a href="#cb31-15"></a>  <span class="fu">scale_fill_manual</span>(</span>
-<span id="cb31-16"><a href="#cb31-16"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;T&quot;</span> <span class="ot">=</span> <span class="st">&quot;coral&quot;</span>, <span class="st">&quot;RH&quot;</span> <span class="ot">=</span> <span class="st">&quot;darkgoldenrod1&quot;</span>),</span>
-<span id="cb31-17"><a href="#cb31-17"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;T&quot;</span> <span class="ot">=</span> <span class="st">&quot;Temperature (°C)&quot;</span>, <span class="st">&quot;RH&quot;</span> <span class="ot">=</span> <span class="st">&quot;Relative Humidity (g/m³)&quot;</span>)</span>
-<span id="cb31-18"><a href="#cb31-18"></a>  ) <span class="sc">+</span></span>
-<span id="cb31-19"><a href="#cb31-19"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>airM <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb27-3"><a href="#cb27-3"></a>    <span class="at">cols =</span> <span class="fu">c</span>(RH, T), </span>
+<span id="cb27-4"><a href="#cb27-4"></a>    <span class="at">names_to =</span> <span class="st">&quot;Variable&quot;</span>, </span>
+<span id="cb27-5"><a href="#cb27-5"></a>    <span class="at">values_to =</span> <span class="st">&quot;Value&quot;</span></span>
+<span id="cb27-6"><a href="#cb27-6"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb27-7"><a href="#cb27-7"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">interaction</span>(Month, Year, <span class="at">sep =</span> <span class="st">&quot;-&quot;</span>), <span class="at">y =</span> Value, <span class="at">fill =</span> Variable)) <span class="sc">+</span></span>
+<span id="cb27-8"><a href="#cb27-8"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="sc">+</span></span>
+<span id="cb27-9"><a href="#cb27-9"></a>  <span class="fu">labs</span>(</span>
+<span id="cb27-10"><a href="#cb27-10"></a>    <span class="at">title =</span> <span class="st">&quot;Temperature and Relative Humidity by Month&quot;</span>,</span>
+<span id="cb27-11"><a href="#cb27-11"></a>    <span class="at">x =</span> <span class="st">&quot;Month-Year&quot;</span>,</span>
+<span id="cb27-12"><a href="#cb27-12"></a>    <span class="at">y =</span> <span class="st">&quot;Values&quot;</span>,</span>
+<span id="cb27-13"><a href="#cb27-13"></a>    <span class="at">fill =</span> <span class="st">&quot;Variable&quot;</span></span>
+<span id="cb27-14"><a href="#cb27-14"></a>  ) <span class="sc">+</span></span>
+<span id="cb27-15"><a href="#cb27-15"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb27-16"><a href="#cb27-16"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;T&quot;</span> <span class="ot">=</span> <span class="st">&quot;coral&quot;</span>, <span class="st">&quot;RH&quot;</span> <span class="ot">=</span> <span class="st">&quot;darkgoldenrod1&quot;</span>),</span>
+<span id="cb27-17"><a href="#cb27-17"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;T&quot;</span> <span class="ot">=</span> <span class="st">&quot;Temperature (°C)&quot;</span>, <span class="st">&quot;RH&quot;</span> <span class="ot">=</span> <span class="st">&quot;Relative Humidity (g/m³)&quot;</span>)</span>
+<span id="cb27-18"><a href="#cb27-18"></a>  ) <span class="sc">+</span></span>
+<span id="cb27-19"><a href="#cb27-19"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
