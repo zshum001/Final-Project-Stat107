@@ -21,7 +21,7 @@ Air quality is a critical component in environmental health, directly influencin
 
 ## The Dataset
 
-The UCI Air Quality Dataset was collected by the University of California, Irvine and acquired from Kaggle. It measures the concentration of about 5 different pollutants in the air in a given area. Some pollutants that are measured include carbon monoxide, benzene, and nitrogen dioxide. It measures pollutant concentrations every hour from March 2004 to April 2005.
+The **UCI Air Quality Dataset**, sourced from the University of California, Irvine via Kaggle, tracks the concentration of five key air pollutants, including carbon monoxide, benzene, and nitrogen dioxide. The data spans from March 2004 to April 2005, recording hourly pollutant levels for a specific area.
 
 ### Packages
 
@@ -30,7 +30,6 @@ library(readxl)
 library(ggplot2)
 library(lubridate)
 library(tidyverse)
-library(dplyr)
 ```
 
 ### Reading Dataset
@@ -41,41 +40,41 @@ air <- read_excel("AirQualityUCI.xls")
 head(air)
 ```
 
-The original dataset contains 9,357 observations and 15 variables.
+The original dataset includes **9,357 observations** and **15 variables**, which are summarized below:
 
-1.  `Date`: The date of the measurement
+1.  `Date`: Date of measurement.
 
-2.  `Time`: The time of the measurement.
+2.  `Time`: Time of measurement.
 
-3.  `CO(GT)`: Concentration of carbon monoxide (CO) in the air (µg/m³).
+3.  `CO(GT)`: Carbon monoxide (CO) concentration (µg/m³).
 
-4.  `PT0.S1(CO)`: Sensor measurement for CO concentration.
+4.  `PT0.S1(CO)`: Sensor measurement for CO.
 
-5.  `NMHC(GT)`: Concentration of non-methane hydrocarbons (NMHC) (µg/m³).
+5.  `NMHC(GT)`: Non-methane hydrocarbons (NMHC) concentration (µg/m³).
 
-6.  `C6H6(GT)`: Concentration of benzene (C6H6) in the air (µg/m³).
+6.  `C6H6(GT)`: Benzene (C6H6) concentration (µg/m³).
 
-7.  `PT08.S2(NMHC)`: Sensor measurement for NMHC concentration.
+7.  `PT08.S2(NMHC)`: Sensor measurement for NMHC.
 
-8.  `NOx(GT)`: Concentration of nitrogen oxide (NOx) in the air (µg/m³).
+8.  `NOx(GT)`: Nitrogen oxide (NOx) concentration (µg/m³).
 
-9.  `PT08.S3(NOx)`: Sensor measurement for NOx concentration.
+9.  `PT08.S3(NOx)`: Sensor measurement for NOx.
 
 10. `NO2(GT)`: Concentration of nitrogen dioxide (NO2) in the air (µg/m³).
 
-11. `PT08.S4(NO2)`: Sensor measurement for NO2 concentration.
+11. `PT08.S4(NO2)`: Sensor measurement for NO2.
 
-12. `PT08.S5(O3)`: Sensor measurement for ozone (O3) concentration
+12. `PT08.S5(O3)`: Sensor measurement for ozone (O3).
 
-13. `T`: Temperature (Celsius)
+13. `T`: Temperature (Celsius).
 
-14. `RH`: Relative humidity (g/m³)
+14. `RH`: Relative humidity (g/m³).
 
-15. `AH`: Absolute humidity (g/m³)
+15. `AH`: Absolute humidity (g/m³).
 
 ### Renaming Columns
 
-Variable columns 3-12 will be renamed as followed to enhance clarity:
+To improve clarity, variables were renamed as follows:
 
 ```{r}
 #| code-fold: true
@@ -114,15 +113,7 @@ air <- air %>%
 
 `PT08.S5(O3)` to `S_O3`
 
-### Tidying The Dataset
-
-```{r}
-#| code-fold: true
-#Summarize dataset (excluding Date and Time columns)
-summary(air[, -c(1, 2)])
-```
-
-Based on the summary, it will be more helpful to implement the sensor measurements in the analyses since non-sensor measurements have negative means (which is unusual).
+### Detecting and Removing Outliers
 
 ```{r}
 #| code-fold: true
@@ -132,7 +123,15 @@ hist(air$S_CO,
      xlab = "CO concentrations")
 ```
 
-From graphing a histogram of, it is obvious that outlines exist. We will use variable S_CO as a starting point for tidying up the data. We will use the IQR method to identify outliers and filter them out of the dataset.
+Using the variable **S_CO** as a test case, a histogram revealed the presence of noticeable outliers. These outliers were identified and removed using the **Interquartile Range (IQR) method** to improve data quality.
+
+These were removed using the **Interquartile Range (IQR)** method.
+
+Outcome:
+
+-   484 observations were removed.
+
+-   The distribution of **S_CO** shifted closer to normality, although still retaining a slight positive skew.
 
 ```{r}
 #| code-fold: true
@@ -147,29 +146,15 @@ upper_bound <- Q3 + 1.5 * IQR
 
 # Filter rows to remove outliers
 air_filtered <- air[air$S_CO >= lower_bound & air$S_CO <= upper_bound, ]
-nrow(air)
-nrow(air_filtered)
-nrow(air) - nrow(air_filtered)
-```
+# Reassign original dataset with filtered dataset
+air <- air_filtered
 
-484 observations were removed from the dataset.
-
-```{r}
-#| code-fold: true
 hist(air_filtered$S_CO,
      main = "Histogram of CO concentrations (after filtering)",
      xlab = "CO concentrations")
 ```
 
-while still positively skewed, it is a great improvement from the previous graph
-
-```{r}
-#| code-fold: true
-# Reassign original dataset with filtered dataset
-air <- air_filtered
-```
-
-### Reformatting The Dataset
+### Reformatting the Dataset
 
 ```{r}
 #| code-fold: true
@@ -189,11 +174,18 @@ airM <- air %>%
   summarize(across(where(is.numeric), ~mean(., na.rm = TRUE)))
 
 head(airM, 5)
+
+#Summarize data (excluding Year and Month columns )
+summary(airM[, -c(1, 2)])
 ```
+
+Upon inspecting the dataset, some non-sensor measurements (e.g., CO, NMHC) revealed unusual negative means, suggesting potential inaccuracies. For this reason, the analysis will prioritize **sensor-based variables**.
 
 # Methodology
 
 # Analysis
+
+## Graphs
 
 ```{r fig.width=10, fig.height=8}
 #| code-fold: true
