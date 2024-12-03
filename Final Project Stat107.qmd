@@ -34,9 +34,15 @@ library(dplyr)
 library(lubridate)
 library(ggplot2)
 
-# Read dataset
-air <- read_excel("AirQualityUCI.xls")
+#Read dataset
+air <- read.csv("AirQualityUCI.csv")
 head(air)
+
+#Number of rows and columns
+dim(air)
+
+#Column names
+colnames(air)
 
 # Number of rows and columns
 dim(air)
@@ -55,13 +61,152 @@ airM <- air %>%
   summarise(across(where(is.numeric), ~mean(., na.rm = TRUE))
 )
 head(airM, 5)
+
+#Convert 'Date' column to date format
+air$Date <- mdy(air$Date)
+# air$Date <- as.Date(air$Date)
+air$Date <- format(air$Date, "%Y-%m")
+
 ```
 
 ```{r}
-# Create plot (average concentration of CO across months)
-ggplot(airM, aes(x = Date, y =`CO(GT)`)) +
-  geom_point() +
-  labs(title = "Avergae concentration of Carbon Monoxide by Month",
-       x = "Date",
-       y = "Concentration of CO in µg/m³")
+#Average Concentration of CO by Month
+
+#Clean data of NA & negative values
+airM <- air %>%
+  filter(!is.na(`CO.GT.`) & `CO.GT.` >= 0)
+
+#Group by month
+airM_clean <- airM %>% 
+  group_by(Date) %>% 
+  summarise(across(where(is.numeric), ~mean(., na.rm = TRUE)))
+
+#Create plot for CO(GT)
+ggplot(airM_clean, aes(x = Date, y = `CO.GT.`)) + geom_point() + geom_line(group = 1) + labs(title = "Average concentration of CO by Month", x = "Date", y = "[CO] in µg/m³") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#Average Concentration of PT08.S1(CO) by Month
+
+#Clean data of NA & negative values
+airM <- air %>%
+  filter(!is.na(`PT08.S1.CO.`) & `PT08.S1.CO.` >= 0)
+
+#Group by month
+airM_clean <- airM %>% 
+  group_by(Date) %>% 
+  summarise(across(where(is.numeric), ~mean(., na.rm = TRUE)))
+
+#Create plot for PT08.S1.CO.
+ggplot(airM_clean, aes(x = Date, y = `PT08.S1.CO.`)) + geom_point() + geom_line(group = 1) + labs(title = "Average concentration of PT08.S1.CO. by Month", x = "Date", y = "PT08.S1(CO)") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#Average Concentration of NMHC(GT) by Month
+
+#Clean data of NA & negative values
+airM <- air %>%
+  filter(!is.na(`NMHC.GT.`) & `NMHC.GT.` >= 0)
+
+#Group by month
+airM_clean <- airM %>% 
+  group_by(Date) %>% 
+  summarise(across(where(is.numeric), ~mean(., na.rm = TRUE)))
+
+#Create plot for CO(GT)
+ggplot(airM_clean, aes(x = Date, y = `NMHC.GT.`)) + geom_point() + geom_line(group = 1) + labs(title = "Average concentration of NMHC.GT. by Month", x = "Date", y = "[NMHC] in µg/m³") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#Average Concentration of C6H6(GT) by Month
+
+#Clean data of NA & negative values
+airM <- air %>%
+  filter(!is.na(`C6H6.GT.`) & `C6H6.GT.` >= 0)
+
+#Group by month
+airM_clean <- airM %>% 
+  group_by(Date) %>% 
+  summarise(across(where(is.numeric), ~mean(., na.rm = TRUE)))
+
+#Create plot for PT08.S1.CO.
+ggplot(airM_clean, aes(x = Date, y = `C6H6.GT.`)) + geom_point() + geom_line(group = 1) + labs(title = "Average concentration of PT08.S1.CO. by Month", x = "Date", y = "[C6H6] in µg/m³") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#Average Concentration of PT08.S2(NMHC) by Month
+
+#Clean data of NA & negative values
+airM <- air %>%
+  filter(!is.na(`PT08.S2.NMHC.`) & `PT08.S2.NMHC.` >= 0)
+
+#Group by month
+airM_clean <- airM %>% 
+  group_by(Date) %>% 
+  summarise(across(where(is.numeric), ~mean(., na.rm = TRUE)))
+
+#Create plot for PT08.S1.CO.
+ggplot(airM_clean, aes(x = Date, y = `PT08.S2.NMHC.`)) + geom_point() + geom_line(group = 1) + labs(title = "Average concentration of PT08.S1.CO. by Month", x = "Date", y = "PT08.S2(NMHC)") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#Average Concentration of NOx(GT) by Month
+
+#Clean data of NA & negative values
+airM <- air %>%
+  filter(!is.na(`NOx.GT.`) & `NOx.GT.` >= 0)
+
+#Group by month
+airM_clean <- airM %>% 
+  group_by(Date) %>% 
+  summarise(across(where(is.numeric), ~mean(., na.rm = TRUE)))
+
+#Create plot for PT08.S1.CO.
+ggplot(airM_clean, aes(x = Date, y = `NOx.GT.`)) + geom_point() + geom_line(group = 1) + labs(title = "Average concentration of PT08.S1.CO. by Month", x = "Date", y = "[NOx] in µg/m³") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#Average Concentration of PT08.S3(NOx) by Month
+
+#Clean data of NA & negative values
+airM <- air %>%
+  filter(!is.na(`PT08.S3.NOx.`) & `PT08.S3.NOx.` >= 0)
+
+#Group by month
+airM_clean <- airM %>% 
+  group_by(Date) %>% 
+  summarise(across(where(is.numeric), ~mean(., na.rm = TRUE)))
+
+#Create plot for PT08.S1.CO.
+ggplot(airM_clean, aes(x = Date, y = `PT08.S3.NOx.`)) + geom_point() + geom_line(group = 1) + labs(title = "Average concentration of PT08.S1.CO. by Month", x = "Date", y = "PT08.S3.NOx.") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#Average Concentration of NO2(GT) by Month
+
+#Clean data of NA & negative values
+airM <- air %>%
+  filter(!is.na(`NO2.GT.`) & `NO2.GT.` >= 0)
+
+#Group by month
+airM_clean <- airM %>% 
+  group_by(Date) %>% 
+  summarise(across(where(is.numeric), ~mean(., na.rm = TRUE)))
+
+#Create plot for PT08.S1.CO.
+ggplot(airM_clean, aes(x = Date, y = `NO2.GT.`)) + geom_point() + geom_line(group = 1) + labs(title = "Average concentration of PT08.S1.CO. by Month", x = "Date", y = "[NO2] in µg/m³") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#Average Concentration of PT08.S4(NO2) by Month
+
+#Clean data of NA & negative values
+airM <- air %>%
+  filter(!is.na(`PT08.S4.NO2.`) & `PT08.S4.NO2.` >= 0)
+
+#Group by month
+airM_clean <- airM %>% 
+  group_by(Date) %>% 
+  summarise(across(where(is.numeric), ~mean(., na.rm = TRUE)))
+
+#Create plot for PT08.S1.CO.
+ggplot(airM_clean, aes(x = Date, y = `PT08.S4.NO2.`)) + geom_point() + geom_line(group = 1) + labs(title = "Average concentration of PT08.S1.CO. by Month", x = "Date", y = "PT08.S4.NO2.") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#Average Concentration of PT08.S5(O2) by Month
+
+#Clean data of NA & negative values
+airM <- air %>%
+  filter(!is.na(`PT08.S5.O3.`) & `PT08.S5.O3.` >= 0)
+
+#Group by month
+airM_clean <- airM %>% 
+  group_by(Date) %>% 
+  summarise(across(where(is.numeric), ~mean(., na.rm = TRUE)))
+
+#Create plot for PT08.S1.CO.
+ggplot(airM_clean, aes(x = Date, y = `PT08.S5.O3.`)) + geom_point() + geom_line(group = 1) + labs(title = "Average concentration of PT08.S1.CO. by Month", x = "Date", y = "PT08.S5.O3.") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
