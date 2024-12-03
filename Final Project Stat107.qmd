@@ -79,8 +79,7 @@ cat(paste(remaining_obs, "observations remain after cleaning.\n"))
 
 # Create the plot with facet_grid()
 plot <- ggplot(airM_long, aes(x = Date, y = avg_pollutant)) +
-  geom_point() +
-  geom_line(group = 1) +
+  geom_bar(stat = 'identity', position = 'dodge') +
   labs(title = "Average Concentration of Pollutants by Month", 
        x = "Date", 
        y = "Average Concentration") +
