@@ -23,48 +23,231 @@ Air quality is a critical component in environmental health, directly influencin
 
 The UCI Air Quality Dataset was collected by the University of California, Irvine and acquired from Kaggle. It measures the concentration of about 5 different pollutants in the air in a given area. Some pollutants that are measured include carbon monoxide, benzene, and nitrogen dioxide. It measures pollutant concentrations every hour from March 2004 to April 2005.
 
-```{r}
-#Load libraries
-library(readxl)
-library(dplyr)
-library(lubridate)
-library(ggplot2)
-```
+### Packages
 
 ```{r}
-#1: options(width = 50)
+library(readxl)
+library(ggplot2)
+library(lubridate)
+library(tidyverse)
+library(dplyr)
+```
+
+### Reading Dataset
+
+```{r}
+#| code-fold: true
 air <- read_excel("AirQualityUCI.xls")
 head(air)
-
-# Number of rows and columns
-dim(air)
-
-# Column names
-colnames(air)
 ```
 
-## Plan for Analysis
+The original dataset contains 9,357 observations and 15 variables.
+
+1.  `Date`: The date of the measurement
+
+2.  `Time`: The time of the measurement.
+
+3.  `CO(GT)`: Concentration of carbon monoxide (CO) in the air (µg/m³).
+
+4.  `PT0.S1(CO)`: Sensor measurement for CO concentration.
+
+5.  `NMHC(GT)`: Concentration of non-methane hydrocarbons (NMHC) (µg/m³).
+
+6.  `C6H6(GT)`: Concentration of benzene (C6H6) in the air (µg/m³).
+
+7.  `PT08.S2(NMHC)`: Sensor measurement for NMHC concentration.
+
+8.  `NOx(GT)`: Concentration of nitrogen oxide (NOx) in the air (µg/m³).
+
+9.  `PT08.S3(NOx)`: Sensor measurement for NOx concentration.
+
+10. `NO2(GT)`: Concentration of nitrogen dioxide (NO2) in the air (µg/m³).
+
+11. `PT08.S4(NO2)`: Sensor measurement for NO2 concentration.
+
+12. `PT08.S5(O3)`: Sensor measurement for ozone (O3) concentration
+
+13. `T`: Temperature (Celsius)
+
+14. `RH`: Relative humidity (g/m³)
+
+15. `AH`: Absolute humidity (g/m³)
+
+### Renaming Columns
+
+Variable columns 3-12 will be renamed as followed to enhance clarity:
 
 ```{r}
-# Convert 'Date' column to date format
-air$Date <- ymd(air$Date) # "Parse dates with *y*ear, *m*onth, and *d*ay components"
-air$Date <- format(air$Date, "%Y-%m") # Formats date to YYYY-mm 
+#| code-fold: true
+air <- air %>% 
+  rename(
+    CO = `CO(GT)`,
+    S_CO = `PT08.S1(CO)`,
+    NMHC = `NMHC(GT)`,
+    S_NMHC = `PT08.S2(NMHC)`,
+    C6H6 = `C6H6(GT)`,
+    NOx = `NOx(GT)`,
+    S_NOx = `PT08.S3(NOx)`,
+    NO2 = `NO2(GT)`,
+    S_NO2 = `PT08.S4(NO2)`,
+    S_O3 = `PT08.S5(O3)`
+  )
+```
 
-# Group by month, where the average is calculated for each numeric column across all month groups, while removing all NA values
-# summarise(): creates a new condensed dataset 
+`CO(GT)` to `CO`
+
+`PT0.S1(CO)` to `S_CO`
+
+`NMHC(GT)` to `NMHC`
+
+`PT08.S2(NMHC)` to `S_NMHC`
+
+`C6H6(GT)` to `C6H6`
+
+`NOx(GT)` to `NOx`
+
+`PT08.S3(NOx)` to `S_NOx`
+
+`NO2(GT)` to `NO2`
+
+`PT08.S4(NO2)` to `S_NO2`
+
+`PT08.S5(O3)` to `S_O3`
+
+### Tidying The Dataset
+
+```{r}
+#| code-fold: true
+#Summarize dataset (excluding Date and Time columns)
+summary(air[, -c(1, 2)])
+```
+
+Based on the summary, it will be more helpful to implement the sensor measurements in the analyses since non-sensor measurements have negative means (which is unusual).
+
+```{r}
+#| code-fold: true
+# Histogram for S_CO 
+hist(air$S_CO,
+     main = "Histogram of CO concentrations",
+     xlab = "CO concentrations")
+```
+
+From graphing a histogram of, it is obvious that outlines exist. We will use variable S_CO as a starting point for tidying up the data. We will use the IQR method to identify outliers and filter them out of the dataset.
+
+```{r}
+#| code-fold: true
+# Calculate IQR
+Q1 <- quantile(air$S_CO, 0.25, na.rm = TRUE)
+Q3 <- quantile(air$S_CO, 0.75, na.rm = TRUE)
+IQR <- Q3 - Q1
+
+# Define outlier bounds
+lower_bound <- Q1 - 1.5 * IQR
+upper_bound <- Q3 + 1.5 * IQR
+
+# Filter rows to remove outliers
+air_filtered <- air[air$S_CO >= lower_bound & air$S_CO <= upper_bound, ]
+nrow(air)
+nrow(air_filtered)
+nrow(air) - nrow(air_filtered)
+```
+
+484 observations were removed from the dataset.
+
+```{r}
+#| code-fold: true
+hist(air_filtered$S_CO,
+     main = "Histogram of CO concentrations (after filtering)",
+     xlab = "CO concentrations")
+```
+
+while still positively skewed, it is a great improvement from the previous graph
+
+```{r}
+#| code-fold: true
+# Reassign original dataset with filtered dataset
+air <- air_filtered
+```
+
+### Reformatting The Dataset
+
+```{r}
+#| code-fold: true
+# Convert 'Date' column to y-m-d format
+air$Date <- ymd(air$Date)
+
+# Create numerical Month and Year columns
+air <- air %>%
+  mutate(
+    Month = month(Date, label = TRUE), # Extracts month as a numeric value (1-12)
+    Year = year(Date)    # Extracts year
+  )
+
+# Group by Year and Month for summarization
 airM <- air %>%
-  group_by(Date) %>%
-  summarise(across(where(is.numeric), ~mean(., na.rm = TRUE))
-)
+  group_by(Year, Month) %>%
+  summarize(across(where(is.numeric), ~mean(., na.rm = TRUE)))
 
 head(airM, 5)
 ```
 
+# Methodology
+
+# Analysis
+
+```{r fig.width=10, fig.height=8}
+#| code-fold: true
+# Plot monthly Concentrations
+airM %>%
+  # Use interaction to combine Month and Year
+  ggplot(aes(x = interaction(Month, Year, sep = "-"))) +
+  # Add points and lines for different pollutants
+  geom_point(aes(y = S_CO, color = "Carbon Monoxide")) + 
+  geom_line(aes(y = S_CO, color = "Carbon Monoxide", group = 1)) +
+  geom_point(aes(y = S_NMHC, color = "Non-Methane Hydrocarbon")) +
+  geom_line(aes(y = S_NMHC, color = "Non-Methane Hydrocarbon", group = 2)) +
+  geom_point(aes(y = S_NOx, color = "Nitrogen Oxide")) + 
+  geom_line(aes(y = S_NOx, color = "Nitrogen Oxide", group = 3)) +
+  geom_point(aes(y = S_NO2, color = "Nitrogen Dioxide")) + 
+  geom_line(aes(y = S_NO2, color = "Nitrogen Dioxide", group = 3)) +
+  geom_point(aes(y = S_O3, color = "Ozone")) + 
+  geom_line(aes(y = S_O3, color = "Ozone", group = 3)) +
+  labs(
+    title = "Average Concentrations of Pollutants by Month (2004-2005)",
+    x = "Month-Year",
+    y = "Concentrations in µg/m³"
+  ) +
+  scale_color_manual(
+    values = c("Carbon Monoxide" = "blue", 
+               "Non-Methane Hydrocarbon" = "red", 
+               "Nitrogen Oxide" = "chartreuse3",
+               "Nitrogen Dioxide" = "purple",
+               "Ozone" = "magenta"),
+    name = "Pollutants"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
+
+airM %>%
+  pivot_longer(
+    cols = c(RH, T), 
+    names_to = "Variable", 
+    values_to = "Value"
+  ) %>%
+  ggplot(aes(x = interaction(Month, Year, sep = "-"), y = Value, fill = Variable)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "Temperature and Relative Humidity by Month",
+    x = "Month-Year",
+    y = "Values",
+    fill = "Variable"
+  ) +
+  scale_fill_manual(
+    values = c("T" = "coral", "RH" = "darkgoldenrod1"),
+    labels = c("T" = "Temperature (°C)", "RH" = "Relative Humidity (g/m³)")
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
 ```{r}
-# Create plot (average concentration of CO across months)
-ggplot(airM, aes(x = Date, y =`CO(GT)`)) +
-  geom_point() +
-  labs(title = "Avergae concentration of Carbon Monoxide by Month",
-       x = "Date",
-       y = "Concentration of CO in µg/m³")
+
 ```
