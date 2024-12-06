@@ -207,13 +207,13 @@ airM %>%
   geom_point(aes(y = S_CO, color = "Carbon Monoxide")) + 
   geom_line(aes(y = S_CO, color = "Carbon Monoxide", group = 1)) +
   geom_point(aes(y = S_NMHC, color = "Non-Methane Hydrocarbon")) +
-  geom_line(aes(y = S_NMHC, color = "Non-Methane Hydrocarbon", group = 2)) +
+  geom_line(aes(y = S_NMHC, color = "Non-Methane Hydrocarbon", group = 1)) +
   geom_point(aes(y = S_NOx, color = "Nitrogen Oxide")) + 
-  geom_line(aes(y = S_NOx, color = "Nitrogen Oxide", group = 3)) +
+  geom_line(aes(y = S_NOx, color = "Nitrogen Oxide", group = 1)) +
   geom_point(aes(y = S_NO2, color = "Nitrogen Dioxide")) + 
-  geom_line(aes(y = S_NO2, color = "Nitrogen Dioxide", group = 3)) +
+  geom_line(aes(y = S_NO2, color = "Nitrogen Dioxide", group = 1)) +
   geom_point(aes(y = S_O3, color = "Ozone")) + 
-  geom_line(aes(y = S_O3, color = "Ozone", group = 3)) +
+  geom_line(aes(y = S_O3, color = "Ozone", group = 1)) +
   labs(
     title = "Total Movies vs. War Movies",
     x = "Month-Year",
@@ -227,6 +227,7 @@ airM %>%
                "Ozone" = "magenta"),
     name = "Pollutants"
   ) +
+  theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
 ```
 
@@ -251,6 +252,7 @@ airM %>%
     values = c("T" = "coral", "RH" = "darkgoldenrod1"),
     labels = c("T" = "Temperature (°C)", "RH" = "Relative Humidity (g/m³)")
   ) +
+  theme_minimal() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
