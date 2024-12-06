@@ -21,9 +21,21 @@ Air quality is a critical component in environmental health, directly influencin
 
 ## The Question
 
-This study investigates: How do harmful air pollutant concentrations vary across different months of the year? By examining seasonal trends and monthly variations in pollutants such as nitrogen dioxide, carbon monoxide, and other key contributors to air quality, we aim to identify patterns that may arise due to seasonal changes, human activities, or environmental factors.
+This study investigates: How do harmful air pollutant concentrations vary across different months of the year? By examining seasonal trends and monthly variations in pollutants, we aim to identify patterns that may arise due to seasonal changes, human activities, or environmental factors.
 
-## The Dataset
+The specific pollutants we will explore in this study include:
+
+1.  **Carbon Monoxide** ($CO$):
+
+2.  **Non-Methane Hydrocarbon** ($NMHC$):
+
+3.  **Nitrogen Dioxide** ($NO_2$):
+
+4.  **Nitrogen Oxide** ($NOx$):
+
+5.  **Ozone** ($O_3$):
+
+# The Dataset
 
 The **UCI Air Quality Dataset**, sourced from the University of California, Irvine via Kaggle, tracks the concentration of five key air pollutants, including carbon monoxide, benzene, and nitrogen dioxide. The data spans from March 2004 to April 2005, recording hourly pollutant levels for a specific area.
 
@@ -36,7 +48,7 @@ library(lubridate)
 library(tidyverse)
 ```
 
-### Reading Dataset
+## Reading Dataset
 
 ```{r}
 #| code-fold: true
@@ -110,7 +122,7 @@ air <- air %>%
 | `PT08.S4(NO2)`  | `S_NO2`  |
 | `PT08.S5(O3)`   | `S_O3`   |
 
-### Detecting and Removing Outliers
+## Detecting and Removing Outliers
 
 ```{r}
 #| code-fold: true
@@ -149,7 +161,7 @@ hist(air_filtered$S_CO,
      xlab = "CO concentrations")
 ```
 
-### Reformatting the Dataset
+## Reformatting
 
 To effectively analyze monthly variations in pollutant concentrations, the dataset will be reorganized by grouping the data by month and year, calculating the average values for each variable within these groups. This restructuring will provide a clearer understanding of seasonal trends and fluctuations.
 
@@ -203,7 +215,7 @@ airM %>%
   geom_point(aes(y = S_O3, color = "Ozone")) + 
   geom_line(aes(y = S_O3, color = "Ozone", group = 3)) +
   labs(
-    title = "Average Concentrations of Pollutants by Month (2004-2005)",
+    title = "Total Movies vs. War Movies",
     x = "Month-Year",
     y = "Concentrations in µg/m³"
   ) +
