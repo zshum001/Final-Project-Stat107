@@ -1,7 +1,7 @@
 ---
 title: "Stat107 Final Project"
 subtitle: "How do harmful air pollutant concentrations vary across different months within a year?"
-author: "Crystal Kuong, Gracelynne Mohad, Sumeet Sammi, Zoe Shum"
+author: "Crystal Kuong, Gracelynne Mohan, Sumeet Sammi, Zoe Shum"
 date: "2024-12-13"
 format:
   html:
@@ -249,5 +249,16 @@ airM %>%
 ```
 
 ```{r}
+#| code-fold: true
+ggplot() +
+  geom_density(data = air_filtered, aes(x=S_CO, color="Carbon Monoxide")) +
+  geom_density(data = air_filtered, aes(x=S_NMHC, color="Non-Methane Hydrocarbon")) +
+  geom_density(data = air_filtered, aes(x=S_NOx, color="Nitrogen Oxide")) +
+  geom_density(data = air_filtered, aes(x=S_NO2, color="Nitrogen Dioxide")) +
+  geom_density(data = air_filtered, aes(x=S_O3, color="Ozone")) +
+  labs(title = "Densities of Pollutant Concentrations", x = "Concentration (µg/m³)", y = "Density") +
+  scale_color_manual(values = c("Carbon Monoxide" = "blue", "Non-Methane Hydrocarbon" = "red", "Nitrogen Oxide" = "chartreuse3","Nitrogen Dioxide" = "purple","Ozone"  = "magenta"))
 
+
+                 
 ```
