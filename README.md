@@ -5,8 +5,8 @@ Group Members: Crystal Kuong, Gracelynne Mohan, Sumeet Sammi, Zoe Shum
 Project Summary:
 
 Packages Used:
-library(readxl)
-library(ggplot2)
-library(lubridate)
-library(tidyverse)
+library(readxl), 
+library(ggplot2), 
+library(lubridate), 
+library(tidyverse), 
 library(dplyr)
