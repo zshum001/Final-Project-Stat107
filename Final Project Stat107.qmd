@@ -27,15 +27,17 @@ This study examines monthly variations in key air pollutants to identify pattern
 
 The specific pollutants we will explore in this study include:
 
-1.  **Carbon Monoxide** ($CO$): A colorless, odorless gas from incomplete fossil fuel combustion, harmful to humans by impairing oxygen delivery.  
+1.  **Carbon Monoxide** ($CO$): A colorless, odorless gas from incomplete fossil fuel combustion, harmful to humans by impairing oxygen delivery.
 
-2.  **Non-Methane Hydrocarbon** ($NMHC$)**:** Organic compounds (excluding methane) that contribute to ground-level ozone and secondary pollutants through photochemical reactions. 
+2.  **Non-Methane Hydrocarbon** ($NMHC$)**:** Organic compounds (excluding methane) that contribute to ground-level ozone and secondary pollutants through photochemical reactions.
 
 3.  **Nitrogen Dioxide** ($NO_2$)**:** A reddish-brown gas from fossil fuel combustion, linked to acid rain, smog, and respiratory issues.
 
 4.  **Nitrogen Oxide** ($NOx$)**:** Gases from fossil fuel combustion that contribute to acid rain, smog, and ozone formation.
 
-5.  **Ozone** ($O_3$)**:** A secondary pollutant formed from precursor emissions like $NOx$ and volatile organic compounds.
+5.  **Nitrogen Oxide** ($NOx$)**:** Similar to $NO_2$, a gas that is produced by combustion of fossil fuels, contributes to acid rain, smog, and ground level ozone.
+
+6.  **Ozone** ($O_3$)**:** A secondary pollutant formed from precursor emissions like $NOx$ and volatile organic compounds.
 
 ## Packages
 
@@ -78,7 +80,7 @@ air <- air %>%
 ```
 
 | Variable | Description                                                    |
-|------------------|------------------------------------------------------|
+|-------------------|-----------------------------------------------------|
 | `Date`   | The date of the measurement                                    |
 | `Time`   | The time of the measurement.                                   |
 | `CO`     | Concentration of carbon monoxide ($CO$) in the air (µg/m³).    |
@@ -245,6 +247,32 @@ The boxplot depicts the fluctuation of each pollutant. Most of the pollutants ha
 
 ```{r fig.width=10, fig.height=6}
 #| code-fold: true
+# Plot monthly Temperatures & Relative Humidity 
+airM %>%
+  pivot_longer(
+    cols = c(RH, T), 
+    names_to = "Variable", 
+    values_to = "Value"
+  ) %>%
+  ggplot(aes(x = interaction(Month, Year, sep = "-"), y = Value, fill = Variable)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "Temperature and Relative Humidity by Month",
+    x = "Month-Year",
+    y = "Values",
+    fill = "Variable"
+  ) +
+  scale_fill_manual(
+    values = c("T" = "coral", "RH" = "darkgoldenrod1"),
+    labels = c("T" = "Temperature (°C)", "RH" = "Relative Humidity (g/m³)")
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+The bar graph shows that relative humidity and temperature have an inverse relationship. In months where the temperature is low, relative humidity is pretty high and vice versa. The temperature rises from June 2004 to September 2004 and falls from November 2004 to February 2005. Relative humidity is especially high in fall and winter months which is depicted in the graph from October 2004 - March 2005.
+
+```{r}
+#| code-fold: true
 ggplot() +
   geom_density(data = air, aes(x = S_CO, color="Carbon Monoxide")) +
   geom_density(data = air, aes(x = S_NMHC, color="Non-Methane Hydrocarbon")) +
@@ -265,16 +293,14 @@ Some of the more spread out distributions, such as Ozone and Nitrogen Dioxide, s
 ## Regression Analysis
 
 ```{r}
-#| code-fold: true
-# Generate the model first
+# Generate some statistics
 model1 <- lm(log(S_NOx) ~ (S_CO), data = air)
 summary(model1)
 
-# Plot the relationship between CO and NO
-air %>% 
-  ggplot() +
+ggplot(data = air) +
   geom_point(aes(x = S_CO, y = S_NOx)) +  
   geom_line(
+    data = air,
     aes(x = S_CO, y = exp(predict(model1, newdata = air))),  
     color = "green"
   ) +
@@ -283,10 +309,9 @@ air %>%
     x = "Carbon Monoxide",
     y = "Nitrogen Oxide"
   )
-
 ```
 
-In an attempt to track the inverse relationship that was previously observed in the line graph between carbon monoxide and nitrogen oxide, a regression analysis was conducted. After plotting the data points, there seemed to be an exponential relationship between the two variables and a regression analysis produced a $R^2$ value of 0.69.
+In an attempt to track the inverse relationship that was previously observed in the line graph between carbon monoxide and nitrogen oxide, a regression analysis was conducted. After plotting the data points, there seemed to be an exponential relationship between the two variables and a regression analysis produced a r squared value of 0.69.
 
 Therefore, there seems to be a moderate correlation between the variables. When carbon monoxide concentration levels go up, nitrogen oxide levels may be predicted to decrease at a decreasing rate, following a slow exponential decay.
 
@@ -296,10 +321,10 @@ In conclusion, this study provided valuable insights into the variations in poll
 
 ## Addressing Potential Errors
 
-**Negative Values in the Dataset:** Negative values, such as “-200.00,” were assigned for missing or invalid data, leading to unrealistic negative means. To address this, we analyzed sensor measurements rather than actual pollutant concentrations. 
+**Negative Values in the Dataset:** Negative values, such as “-200.00,” were assigned for missing or invalid data, leading to unrealistic negative means. To address this, we analyzed sensor measurements rather than actual pollutant concentrations.
 
-**Outliers in the Dataset:** Outliers were identified using the IQR method, but this approach can exclude valid extreme values, highlighting the need for careful consideration when filtering data. 
+**Outliers in the Dataset:** Outliers were identified using the IQR method, but this approach can exclude valid extreme values, highlighting the need for careful consideration when filtering data.
 
-**Sensor Measurement Error:** Sensor errors due to calibration issues, environmental impacts, or sensor aging may result in inaccuracies, particularly in long-term data collection. 
+**Sensor Measurement Error:** Sensor errors due to calibration issues, environmental impacts, or sensor aging may result in inaccuracies, particularly in long-term data collection.
 
 **Regional Specificity:** This dataset focuses on the pollutant concentrations in a specific area, meaning that the variation of air quality across different locations may not be represented well. Factors such as traffic, industry, and geographical features can influence the pollutant levels in the area. While the data provides valuable insights into the air quality of the area over time, the data generalizations are limited as a result of the limited sampling region.
