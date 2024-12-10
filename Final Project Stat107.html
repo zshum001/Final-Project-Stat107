@@ -3378,8 +3378,8 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 </div>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 26%">
-<col style="width: 73%">
+<col style="width: 27%">
+<col style="width: 72%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -3764,10 +3764,10 @@ Residual standard error: 0.1618 on 8871 degrees of freedom
 Multiple R-squared:  0.6902,    Adjusted R-squared:  0.6901 
 F-statistic: 1.976e+04 on 1 and 8871 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> air) <span class="sc">+</span></span>
-<span id="cb26-2"><a href="#cb26-2"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> S_CO, <span class="at">y =</span> S_NOx)) <span class="sc">+</span>  </span>
-<span id="cb26-3"><a href="#cb26-3"></a>  <span class="fu">geom_line</span>(</span>
-<span id="cb26-4"><a href="#cb26-4"></a>    <span class="at">data =</span> air,</span>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>air <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> S_CO, <span class="at">y =</span> S_NOx)) <span class="sc">+</span>  </span>
+<span id="cb26-4"><a href="#cb26-4"></a>  <span class="fu">geom_line</span>(</span>
 <span id="cb26-5"><a href="#cb26-5"></a>    <span class="fu">aes</span>(<span class="at">x =</span> S_CO, <span class="at">y =</span> <span class="fu">exp</span>(<span class="fu">predict</span>(model1, <span class="at">newdata =</span> air))),  </span>
 <span id="cb26-6"><a href="#cb26-6"></a>    <span class="at">color =</span> <span class="st">&quot;green&quot;</span></span>
 <span id="cb26-7"><a href="#cb26-7"></a>  ) <span class="sc">+</span></span>
