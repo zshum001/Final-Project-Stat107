@@ -80,7 +80,7 @@ air <- air %>%
 ```
 
 | Variable | Description                                                    |
-|-------------------|-----------------------------------------------------|
+|--------------------|----------------------------------------------------|
 | `Date`   | The date of the measurement                                    |
 | `Time`   | The time of the measurement.                                   |
 | `CO`     | Concentration of carbon monoxide ($CO$) in the air (µg/m³).    |
@@ -297,10 +297,10 @@ Some of the more spread out distributions, such as Ozone and Nitrogen Dioxide, s
 model1 <- lm(log(S_NOx) ~ (S_CO), data = air)
 summary(model1)
 
-ggplot(data = air) +
+air %>%
+  ggplot() +
   geom_point(aes(x = S_CO, y = S_NOx)) +  
   geom_line(
-    data = air,
     aes(x = S_CO, y = exp(predict(model1, newdata = air))),  
     color = "green"
   ) +
