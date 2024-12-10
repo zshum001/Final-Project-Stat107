@@ -19,25 +19,21 @@ format:
 
 Air quality is a critical component in environmental health, directly influencing both the ecosystem and human well-being. It is determined by the presence of various pollutants including, but not limited to nitrogen dioxide and carbon monoxide. Poor air quality is linked to serious health issues, including respiratory diseases, cardiovascular problems, and reduced life expectancy. Moreover, air pollution contributes to climate change and harming wildlife. Monitoring and understanding air quality prompts initiatives centered on reducing the concentration of air pollutants, thereby, creating a cleaner environment.
 
-## The Question
-
-This study investigates: How do harmful air pollutant concentrations vary across different months of the year? By examining seasonal trends and monthly variations in pollutants, we aim to identify patterns that may arise due to seasonal changes, human activities, or environmental factors.
-
 The specific pollutants we will explore in this study include:
 
-1.  **Carbon Monoxide** ($CO$):
+1.  **Carbon Monoxide (**$CO$): A colorless, odorless gas that is produced by the incomplete combustion of fossil fuels, which contributes to air pollution and can be harmful to humans as it blocks the successful delivery of oxygen to vital areas.  
 
-2.  **Non-Methane Hydrocarbon** ($NMHC$):
+2.  **Non-Methane Hydrocarbon (**$NMHC$)**:** Organic compounds excluding methane that contribute to the formation of ground level ozone and secondary air pollutants through photochemical reactions. 
 
-3.  **Nitrogen Dioxide** ($NO_2$):
+3.  **Nitrogen Dioxide (**$NO_2$)**:** A reddish-brown colored gas that is produced by combustion of fossil fuels, contributes to acid rain, smog, and respiratory problems in humans.
 
-4.  **Nitrogen Oxide** ($NOx$):
+4.  **Nitrogen Oxide (**$NOx$)**:** Similarly to $NO_2$, a gas that is produced by combustion of fossil fuels, contributes to acid rain, smog, and ground level ozone.
 
-5.  **Ozone** ($O_3$):
+5.  **Ozone (**$O_3$)**:** A secondary pollutant formed in the atmosphere from precursor emissions like $NOx$ and volatile organic compounds.
 
-# The Dataset
+## The Dataset
 
-The **UCI Air Quality Dataset**, sourced from the University of California, Irvine via Kaggle, tracks the concentration of five key air pollutants, including carbon monoxide, benzene, and nitrogen dioxide. The data spans from March 2004 to April 2005, recording hourly pollutant levels for a specific area.
+The UCI Air Quality Dataset was collected by the University of California, Irvine and acquired from Kaggle. It measures the concentration of about 5 different pollutants in the air in a given area. Some pollutants that are measured include carbon monoxide, benzene, and nitrogen dioxide. It measures pollutant concentrations every hour from March 2004 to April 2005.
 
 ### Packages
 
@@ -46,9 +42,8 @@ library(readxl)
 library(ggplot2)
 library(lubridate)
 library(tidyverse)
+library(dplyr)
 ```
-
-## Reading Dataset
 
 ```{r}
 #| code-fold: true
@@ -56,41 +51,41 @@ air <- read_excel("AirQualityUCI.xls")
 head(air)
 ```
 
-The original dataset includes **9,357 observations** and **15 variables**, which are summarized below:
+The original dataset contains 9,357 observations and 15 variables.
 
-1.  `Date`: Date of measurement.
+1.  `Date`: The date of the measurement
 
-2.  `Time`: Time of measurement.
+2.  `Time`: The time of the measurement.
 
-3.  `CO(GT)`: Carbon monoxide (CO) concentration (µg/m³).
+3.  `CO(GT)`: Concentration of carbon monoxide (CO) in the air (µg/m³).
 
-4.  `PT0.S1(CO)`: Sensor measurement for CO.
+4.  `PT0.S1(CO)`: Sensor measurement for CO concentration.
 
-5.  `NMHC(GT)`: Non-methane hydrocarbons (NMHC) concentration (µg/m³).
+5.  `NMHC(GT)`: Concentration of non-methane hydrocarbons (NMHC) (µg/m³).
 
-6.  `C6H6(GT)`: Benzene (C6H6) concentration (µg/m³).
+6.  `C6H6(GT)`: Concentration of benzene (C6H6) in the air (µg/m³).
 
-7.  `PT08.S2(NMHC)`: Sensor measurement for NMHC.
+7.  `PT08.S2(NMHC)`: Sensor measurement for NMHC concentration.
 
-8.  `NOx(GT)`: Nitrogen oxide (NOx) concentration (µg/m³).
+8.  `NOx(GT)`: Concentration of nitrogen oxide (NOx) in the air (µg/m³).
 
-9.  `PT08.S3(NOx)`: Sensor measurement for NOx.
+9.  `PT08.S3(NOx)`: Sensor measurement for NOx concentration.
 
 10. `NO2(GT)`: Concentration of nitrogen dioxide (NO2) in the air (µg/m³).
 
-11. `PT08.S4(NO2)`: Sensor measurement for NO2.
+11. `PT08.S4(NO2)`: Sensor measurement for NO2 concentration.
 
-12. `PT08.S5(O3)`: Sensor measurement for ozone (O3).
+12. `PT08.S5(O3)`: Sensor measurement for ozone (O3) concentration
 
-13. `T`: Temperature (Celsius).
+13. `T`: Temperature (Celsius)
 
-14. `RH`: Relative humidity (g/m³).
+14. `RH`: Relative humidity (g/m³)
 
-15. `AH`: Absolute humidity (g/m³).
+15. `AH`: Absolute humidity (g/m³)
 
 ### Renaming Columns
 
-To improve clarity, variables were renamed as follows:
+Variable columns 3-12 will be renamed as followed to enhance clarity:
 
 ```{r}
 #| code-fold: true
@@ -109,20 +104,35 @@ air <- air %>%
   )
 ```
 
-| Old Name        | New Name |
-|-----------------|----------|
-| `CO(GT)`        | `CO`     |
-| `PT0.S1(CO)`    | `S_CO`   |
-| `NMHC(GT)`      | `NMHC`   |
-| `PT08.S2(NMHC)` | `S_NMHC` |
-| `C6H6(GT)`      | `C6H6`   |
-| `NOx(GT)`       | `NOx`    |
-| `PT08.S3(NOx)`  | `S_NOx`  |
-| `NO2(GT)`       | `NO2`    |
-| `PT08.S4(NO2)`  | `S_NO2`  |
-| `PT08.S5(O3)`   | `S_O3`   |
+`CO(GT)` to `CO`
 
-## Detecting and Removing Outliers
+`PT0.S1(CO)` to `S_CO`
+
+`NMHC(GT)` to `NMHC`
+
+`PT08.S2(NMHC)` to `S_NMHC`
+
+`C6H6(GT)` to `C6H6`
+
+`NOx(GT)` to `NOx`
+
+`PT08.S3(NOx)` to `S_NOx`
+
+`NO2(GT)` to `NO2`
+
+`PT08.S4(NO2)` to `S_NO2`
+
+`PT08.S5(O3)` to `S_O3`
+
+### Tidying The Dataset
+
+```{r}
+#| code-fold: true
+#Summarize dataset (excluding Date and Time columns)
+summary(air[, -c(1, 2)])
+```
+
+Based on the summary, it will be more helpful to implement the sensor measurements in the analyses since non-sensor measurements have negative means (which is unusual).
 
 ```{r}
 #| code-fold: true
@@ -132,13 +142,7 @@ hist(air$S_CO,
      xlab = "CO concentrations")
 ```
 
-Using the variable **S_CO** as a test case, a histogram revealed the presence of noticeable outliers. These outliers were identified and removed using the **Interquartile Range (IQR) method** to improve data quality.
-
-The outcome:
-
--   484 observations were removed.
-
--   The distribution of **S_CO** shifted closer to normality, although still retaining a slight positive skew.
+From graphing a histogram of, it is obvious that outlines exist. We will use variable S_CO as a starting point for tidying up the data. We will use the IQR method to identify outliers and filter them out of the dataset.
 
 ```{r}
 #| code-fold: true
@@ -153,17 +157,29 @@ upper_bound <- Q3 + 1.5 * IQR
 
 # Filter rows to remove outliers
 air_filtered <- air[air$S_CO >= lower_bound & air$S_CO <= upper_bound, ]
-# Reassign original dataset with filtered dataset
-air <- air_filtered
+nrow(air)
+nrow(air_filtered)
+nrow(air) - nrow(air_filtered)
+```
 
+484 observations were removed from the dataset.
+
+```{r}
+#| code-fold: true
 hist(air_filtered$S_CO,
      main = "Histogram of CO concentrations (after filtering)",
      xlab = "CO concentrations")
 ```
 
-## Reformatting
+while still positively skewed, it is a great improvement from the previous graph
 
-To effectively analyze monthly variations in pollutant concentrations, the dataset will be reorganized by grouping the data by month and year, calculating the average values for each variable within these groups. This restructuring will provide a clearer understanding of seasonal trends and fluctuations.
+```{r}
+#| code-fold: true
+# Reassign original dataset with filtered dataset
+air <- air_filtered
+```
+
+### Reformatting The Dataset
 
 ```{r}
 #| code-fold: true
@@ -185,37 +201,24 @@ airM <- air %>%
 head(airM, 5)
 ```
 
-```{r}
-#| code-fold: true
-#Summarize data (excluding Year and Month columns )
-summary(airM[, -c(1, 2)])
-```
-
-Upon inspecting the dataset, some non-sensor measurements (e.g., CO, NMHC) revealed unusual negative means, suggesting potential inaccuracies. For this reason, the analysis will prioritize **sensor-based variables**.
+# Methodology
 
 # Analysis
 
-## Graphs
-
-```{r fig.width=10, fig.height=6}
+```{r fig.width=10, fig.height=8}
 #| code-fold: true
 # Plot monthly Concentrations
 airM %>%
   # Use interaction to combine Month and Year
   ggplot(aes(x = interaction(Month, Year, sep = "-"))) +
   # Add points and lines for different pollutants
-  geom_point(aes(y = S_CO, color = "Carbon Monoxide")) + 
   geom_line(aes(y = S_CO, color = "Carbon Monoxide", group = 1)) +
-  geom_point(aes(y = S_NMHC, color = "Non-Methane Hydrocarbon")) +
-  geom_line(aes(y = S_NMHC, color = "Non-Methane Hydrocarbon", group = 1)) +
-  geom_point(aes(y = S_NOx, color = "Nitrogen Oxide")) + 
-  geom_line(aes(y = S_NOx, color = "Nitrogen Oxide", group = 1)) +
-  geom_point(aes(y = S_NO2, color = "Nitrogen Dioxide")) + 
-  geom_line(aes(y = S_NO2, color = "Nitrogen Dioxide", group = 1)) +
-  geom_point(aes(y = S_O3, color = "Ozone")) + 
-  geom_line(aes(y = S_O3, color = "Ozone", group = 1)) +
+  geom_line(aes(y = S_NMHC, color = "Non-Methane Hydrocarbon", group = 2)) +
+  geom_line(aes(y = S_NOx, color = "Nitrogen Oxide", group = 3)) +
+  geom_line(aes(y = S_NO2, color = "Nitrogen Dioxide", group = 3)) +
+  geom_line(aes(y = S_O3, color = "Ozone", group = 3)) +
   labs(
-    title = "Total Movies vs. War Movies",
+    title = "Average Concentrations of Pollutants by Month (2004-2005)",
     x = "Month-Year",
     y = "Concentrations in µg/m³"
   ) +
@@ -227,13 +230,8 @@ airM %>%
                "Ozone" = "magenta"),
     name = "Pollutants"
   ) +
-  theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
-```
 
-```{r fig.width=10, fig.height=6}
-#| code-fold: true
-# Plot monthly Temperatures and Relative Humidity
 airM %>%
   pivot_longer(
     cols = c(RH, T), 
@@ -252,15 +250,11 @@ airM %>%
     values = c("T" = "coral", "RH" = "darkgoldenrod1"),
     labels = c("T" = "Temperature (°C)", "RH" = "Relative Humidity (g/m³)")
   ) +
-  theme_minimal() + 
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-## Tests
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAaCAYAAADFTB7LAAAAcElEQVR4Xu3OwQmAQAxE0bClWYCW5N06tM6V2YPg5CjoF/JhLoHAi6iqn9eOefUbqrYvHY0cQDLyAlKRNyARmYA0ZMLRkAlGQyaU72tkAtlim7r/vJqDUDjlKBROOQyFU2icQuMUGqfQuBEaV1XPOwEx96nYACK8+wAAAABJRU5ErkJggg== "Run Current Chunk")
 
 ```{r}
+
 ```
-
-# Conclusion
-
-## Addressing Potential Errors 
