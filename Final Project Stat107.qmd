@@ -1,7 +1,7 @@
 ---
 title: "Stat107 Final Project"
 subtitle: "How do harmful air pollutant concentrations vary across different months within a year?"
-author: "Crystal Kuong, Gracelynne Mohad, Sumeet Sammi, Zoe Shum"
+author: "Crystal Kuong, Gracelynne Mohan, Sumeet Sammi, Zoe Shum"
 date: "2024-12-13"
 format:
   html:
@@ -72,7 +72,7 @@ air <- air %>%
 ```
 
 | Variable | Description                                                    |
-|--------------------|----------------------------------------------------|
+|----------|----------------------------------------------------------------|
 | `Date`   | The date of the measurement                                    |
 | `Time`   | The time of the measurement.                                   |
 | `CO`     | Concentration of carbon monoxide ($CO$) in the air (µg/m³).    |
@@ -257,11 +257,26 @@ airM %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+```{r}
+#| code-fold: true
+ggplot() +
+  geom_density(data = air_filtered, aes(x=S_CO, color="Carbon Monoxide")) +
+  geom_density(data = air_filtered, aes(x=S_NMHC, color="Non-Methane Hydrocarbon")) +
+  geom_density(data = air_filtered, aes(x=S_NOx, color="Nitrogen Oxide")) +
+  geom_density(data = air_filtered, aes(x=S_NO2, color="Nitrogen Dioxide")) +
+  geom_density(data = air_filtered, aes(x=S_O3, color="Ozone")) +
+  labs(title = "Densities of Pollutant Concentrations", x = "Concentration (µg/m³)", y = "Density") +
+  scale_color_manual(values = c("Carbon Monoxide" = "blue", "Non-Methane Hydrocarbon" = "red", "Nitrogen Oxide" = "chartreuse3","Nitrogen Dioxide" = "purple","Ozone"  = "magenta"))
+
+
+                 
+```
+
 The bar graph shows that relative humidity and temperature have an inverse relationship. In months where the temperature is low, relative humidity is pretty high and vice versa. The temperature rises from June 2004 to September 2004 and falls from November 2004 to February 2005. Relative humidity is especially high in fall and winter months which is depicted in the graph from October 2004 - March 2005. 
 
 # Conclusion
 
-## Addressing Potential Errors 
+## Addressing Potential Errors
 
 **Negative values in the Dataset:**
 
