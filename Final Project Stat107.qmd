@@ -276,8 +276,8 @@ ggplot() +
 
 ```{r}
 # Regression Analysis
-# Plot the relationship between CO and NO
 
+# Plot the relationship between CO and NO
 ggplot(data = air) +
   geom_point(aes(x=S_CO, y = S_NOx)) + 
   labs(
@@ -292,7 +292,7 @@ summary(model1)
 There seems to be an exponential relationship between these two variables. 
 
 ```{r}
-# Conduct a regression analysis after we have concluded that there is an exponential relationship between the variables
+# Conduct a regression analysis
 
 ggplot(data = air) +
   geom_point(aes(x = S_CO, y = S_NOx)) +  
@@ -308,6 +308,7 @@ ggplot(data = air) +
   )
 ```
 
+In an attempt to track the inverse relationship that was previously observed in the line graph between carbon monoxide and nitrogen oxide, a regression analysis was conducted. After plotting the data points, there seemed to be an exponential relationship between the two variables and a regression analysis produced a r squared value of 0.69. Therefore, there seems to be a moderate correlation between the variables. When carbon monoxide concentration levels go up, nitrogen oxide levels may be predicted to decrease at a decreasing rate, following a slow exponential decay. 
 
 # Conclusion
 
