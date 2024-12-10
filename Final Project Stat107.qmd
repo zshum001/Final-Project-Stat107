@@ -19,7 +19,7 @@ format:
 
 Air quality is a vital aspect of environmental health, impacting ecosystems and human well-being. It is determined by the presence of various pollutants including, but not limited to nitrogen dioxide and carbon monoxide. Poor air quality is commonly linked to climate change and wildlife damage, as well as serious health issues, including respiratory diseases, cardiovascular problems, and reduced life expectancy. Understanding air quality trends can evoke initiatives centered on reducing the concentration of air pollutants, creating a cleaner environment and improving quality of life. 
 
-## **The Question**
+## The Question
 
 ***This study investigates: How do harmful air pollutant concentrations vary across different months of the year?***
 
@@ -78,7 +78,7 @@ air <- air %>%
 ```
 
 | Variable | Description                                                    |
-|---------------|---------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | `Date`   | The date of the measurement                                    |
 | `Time`   | The time of the measurement.                                   |
 | `CO`     | Concentration of carbon monoxide ($CO$) in the air (µg/m³).    |
@@ -262,30 +262,44 @@ The Densities of Pollution Concentrations graph shows the distribution of pollut
 
 Some of the more spread out distributions, such as Ozone and Nitrogen Dioxide, show that there’s a wider variation in the levels of concentration. Non-methane Hydrocarbons and Nitrogen Oxide seem to have a correlation, which is likely because they tend to coexist in areas with high pollution.
 
-## **Regression Analysis**
+## Regression Analysis
 
 ```{r}
+#| code-fold: true
+# Generate the model first
+model1 <- lm(log(S_NOx) ~ (S_CO), data = air)
+summary(model1)
+
+# Plot the relationship between CO and NO
+air %>% 
+  ggplot() +
+  geom_point(aes(x = S_CO, y = S_NOx)) +  
+  geom_line(
+    aes(x = S_CO, y = exp(predict(model1, newdata = air))),  
+    color = "green"
+  ) +
+  labs(
+    title = "Relationship between CO and NO",
+    x = "Carbon Monoxide",
+    y = "Nitrogen Oxide"
+  )
 
 ```
 
-In an attempt to track the inverse relationship that was previously observed in the line graph between carbon monoxide and nitrogen oxide, a regression analysis was conducted. After plotting the data points, there seemed to be an exponential relationship between the two variables and a regression analysis produced a r squared value of 0.69.
+In an attempt to track the inverse relationship that was previously observed in the line graph between carbon monoxide and nitrogen oxide, a regression analysis was conducted. After plotting the data points, there seemed to be an exponential relationship between the two variables and a regression analysis produced a $R^2$ value of 0.69.
 
-Therefore, there seems to be a moderate correlation between the variables. When carbon monoxide concentration levels go up, nitrogen oxide levels may be predicted to decrease at a decreasing rate, following a slow exponential decay. 
+Therefore, there seems to be a moderate correlation between the variables. When carbon monoxide concentration levels go up, nitrogen oxide levels may be predicted to decrease at a decreasing rate, following a slow exponential decay.
+
+# Conclusion
+
+In conclusion, this study provided valuable insights into the variations in pollutant concentrations across different months and the seasonal trends influencing air quality. Notably, nitrogen dioxide levels were consistently high, likely due to the combustion of fossil fuels, while pollutants like ozone and carbon monoxide exhibited seasonal dips. Furthermore, the overall variation in pollutant levels across the year highlighted the dynamic nature of air quality, making identifying clear and consistent seasonal trends a challenge with the data currently available.
 
 ## Addressing Potential Errors
 
-**Negative values in the Dataset:**
+**Negative Values in the Dataset:** Negative values, such as “-200.00,” were assigned for missing or invalid data, leading to unrealistic negative means. To address this, we analyzed sensor measurements rather than actual pollutant concentrations. 
 
-In our dataset, negative values (-200) were assigned for any measurements that had missing values and/or invalid data points which led to a negative value when calculating the mean of each pollutant for each month. To address this, we only considered the sensor measurements for each pollutant rather than the actual pollutant concentrations.
+**Outliers in the Dataset:** Outliers were identified using the IQR method, but this approach can exclude valid extreme values, highlighting the need for careful consideration when filtering data. 
 
-**Outliers in the Dataset:**
+**Sensor Measurement Error:** Sensor errors due to calibration issues, environmental impacts, or sensor aging may result in inaccuracies, particularly in long-term data collection. 
 
-Outliers present potential errors in analyzing the dataset due to its nature to skew statistical measurements. Because we are calculating the mean, it is important to take into account any outliers as well. This was addressed by using the IQR method to identify and filter out the outliers. However, this approach can be subjective, especially when working with larger datasets. Also, some extreme values might be valid (i.e. pollution spikes during certain events). 
-
-**Sensor Measurement Error:**
-
-Inaccurate readings can occur due to improper calibrations and sensor measurement drifts which can misinterpret pollutant concentration conclusions. This can happen due to environmental factors, calibration issues, or sensor aging. Because the data was collected over many months, these errors have a higher chance at influencing sensor measurements and affect the accuracy of the data. Thus, it is important to take into account the environmental factors (like temperature and humidity) when analyzing the data. 
-
-**Regional Specificity:**
-
-This dataset focuses on the pollutant concentrations in a specific area, meaning that the variation of air quality across different locations may not be represented well. Factors such as traffic and industrial activity, and geographical features can influence the pollutant levels in the area. As a result, while the data provides valuable insights into air quality of the are over time, the ability to generalize the data and trends in other parts of the region may be limited. 
+**Regional Specificity:** This dataset focuses on the pollutant concentrations in a specific area, meaning that the variation of air quality across different locations may not be represented well. Factors such as traffic, industry, and geographical features can influence the pollutant levels in the area. While the data provides valuable insights into the air quality of the area over time, the data generalizations are limited as a result of the limited sampling region.
