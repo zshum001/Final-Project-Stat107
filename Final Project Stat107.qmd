@@ -27,7 +27,7 @@ The specific pollutants we will explore in this study include:
 
 3.  **Nitrogen Dioxide** ($NO_2$)**:** A reddish-brown colored gas that is produced by combustion of fossil fuels, contributes to acid rain, smog, and respiratory problems in humans.
 
-4.  **Nitrogen Oxide** ($NOx$)**:** Similarly to $NO_2$, a gas that is produced by combustion of fossil fuels, contributes to acid rain, smog, and ground level ozone.
+4.  **Nitrogen Oxide** ($NOx$)**:** Similar to $NO_2$, a gas that is produced by combustion of fossil fuels, contributes to acid rain, smog, and ground level ozone.
 
 5.  **Ozone** ($O_3$)**:** A secondary pollutant formed in the atmosphere from precursor emissions like $NOx$ and volatile organic compounds.
 
@@ -270,6 +270,13 @@ ggplot() +
   scale_color_manual(values = c("Carbon Monoxide" = "blue", "Non-Methane Hydrocarbon" = "red", "Nitrogen Oxide" = "chartreuse3","Nitrogen Dioxide" = "purple","Ozone"  = "magenta"))
 ```
 
+```{r}
+# ANOVA test ~ Concentrations of Pollutants
+fit <- lm(Concentration ~ Pollutant, data = airM_2)
+anova(fit)
+
+# Since the p-value is less than 0.05, we have evidence that the type of pollutant does have an effect on its  concentration. We can reject the null hypothesis that the type of pollutant does not have an effect on concentration.
+```
 
 ```{r}
 # Regression Analysis
