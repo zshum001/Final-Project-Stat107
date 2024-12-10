@@ -167,11 +167,8 @@ Upon inspecting the dataset, some non-sensor measurements (e.g., CO, NMHC) revea
 
 ```{r}
 #| code-fold: true
-airM <- air[ ,-c(3,5,6,8,10)] %>%
-  group_by(Year, Month) %>%
-  summarize(across(where(is.numeric), 
-                   ~mean(., na.rm = TRUE)),
-            .groups = "drop")
+# Disregard non-sensor pollutant measurements 
+airM <- airM[ ,-c(3,5,6,8,10)]
 
 head(airM, 5)
 ```
