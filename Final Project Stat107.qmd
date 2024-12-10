@@ -72,7 +72,7 @@ air <- air %>%
 ```
 
 | Variable | Description                                                    |
-|--------------------|----------------------------------------------------|
+|----------|----------------------------------------------------------------|
 | `Date`   | The date of the measurement                                    |
 | `Time`   | The time of the measurement.                                   |
 | `CO`     | Concentration of carbon monoxide ($CO$) in the air (µg/m³).    |
@@ -257,7 +257,6 @@ airM %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-<<<<<<< HEAD
 ```{r}
 #| code-fold: true
 ggplot() +
@@ -272,12 +271,12 @@ ggplot() +
 
                  
 ```
-=======
+
 The bar graph shows that relative humidity and temperature have an inverse relationship. In months where the temperature is low, relative humidity is pretty high and vice versa. The temperature rises from June 2004 to September 2004 and falls from November 2004 to February 2005. Relative humidity is especially high in fall and winter months which is depicted in the graph from October 2004 - March 2005. 
 
 # Conclusion
 
-## Addressing Potential Errors 
+## Addressing Potential Errors
 
 **Negative values in the Dataset:**
 
@@ -294,4 +293,3 @@ Inaccurate readings can occur due to improper calibrations and sensor measuremen
 **Regional Specificity:**
 
 This dataset focuses on the pollutant concentrations in a specific area, meaning that the variation of air quality across different locations may not be represented well. Factors such as traffic and industrial activity, and geographical features can influence the pollutant levels in the area. As a result, while the data provides valuable insights into air quality of the are over time, the ability to generalize the data and trends in other parts of the region may be limited. 
->>>>>>> zoe
