@@ -3227,14 +3227,18 @@ window.Quarto = {
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
+  <li><a href="#packages" id="toc-packages" class="nav-link" data-scroll-target="#packages">Packages</a></li>
   <li><a href="#the-dataset" id="toc-the-dataset" class="nav-link" data-scroll-target="#the-dataset">The Dataset</a>
   <ul class="collapse">
-  <li><a href="#packages" id="toc-packages" class="nav-link" data-scroll-target="#packages">Packages</a></li>
   <li><a href="#tidying-the-dataset" id="toc-tidying-the-dataset" class="nav-link" data-scroll-target="#tidying-the-dataset">Tidying The Dataset</a></li>
   <li><a href="#reformatting-the-dataset" id="toc-reformatting-the-dataset" class="nav-link" data-scroll-target="#reformatting-the-dataset">Reformatting The Dataset</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#addressing-potential-errors" id="toc-addressing-potential-errors" class="nav-link" data-scroll-target="#addressing-potential-errors">Addressing Potential Errors</a></li>
+  </ul></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Final-Project-Stat107.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
 </div>
@@ -3285,11 +3289,8 @@ window.Quarto = {
 <li><p><strong>Nitrogen Oxide</strong> (<span class="math inline">\(NOx\)</span>)<strong>:</strong> Similarly to <span class="math inline">\(NO_2\)</span>, a gas that is produced by combustion of fossil fuels, contributes to acid rain, smog, and ground level ozone.</p></li>
 <li><p><strong>Ozone</strong> (<span class="math inline">\(O_3\)</span>)<strong>:</strong> A secondary pollutant formed in the atmosphere from precursor emissions like <span class="math inline">\(NOx\)</span> and volatile organic compounds.</p></li>
 </ol>
-<section id="the-dataset" class="level2">
-<h2 class="anchored" data-anchor-id="the-dataset">The Dataset</h2>
-<p>The UCI Air Quality Dataset was collected by the University of California, Irvine and acquired from Kaggle. It measures the concentration of about 5 different pollutants in the air in a given area. Some pollutants that are measured include carbon monoxide, benzene, and nitrogen dioxide. It measures pollutant concentrations every hour from March 2004 to April 2005.</p>
-<section id="packages" class="level3">
-<h3 class="anchored" data-anchor-id="packages">Packages</h3>
+<section id="packages" class="level2">
+<h2 class="anchored" data-anchor-id="packages">Packages</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(readxl)</span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(ggplot2)</span>
@@ -3319,6 +3320,10 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="the-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="the-dataset">The Dataset</h2>
+<p>The UCI Air Quality Dataset was collected by the University of California, Irvine and acquired from Kaggle. It measures the concentration of about 5 different pollutants in the air in a given area. Some pollutants that are measured include carbon monoxide, benzene, and nitrogen dioxide. It measures pollutant concentrations every hour from March 2004 to April 2005.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -3340,23 +3345,24 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 #   `PT08.S4(NO2)` &lt;dbl&gt;, `PT08.S5(O3)` &lt;dbl&gt;, T &lt;dbl&gt;, RH &lt;dbl&gt;, AH &lt;dbl&gt;</code></pre>
 </div>
 </div>
-<p>The original dataset contains 9,357 observations and 15 variables. Variable columns 3-12 will be renamed as followed to enhance clarity.</p>
+<p>The original dataset contains 9,357 observations and 15 variables. Variable columns 3-12 were renamed as followed to enhance clarity.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>air <span class="ot">&lt;-</span> air <span class="sc">%&gt;%</span> </span>
-<span id="cb10-2"><a href="#cb10-2"></a>  <span class="fu">rename</span>(</span>
-<span id="cb10-3"><a href="#cb10-3"></a>    <span class="at">CO =</span> <span class="st">`</span><span class="at">CO(GT)</span><span class="st">`</span>,</span>
-<span id="cb10-4"><a href="#cb10-4"></a>    <span class="at">S_CO =</span> <span class="st">`</span><span class="at">PT08.S1(CO)</span><span class="st">`</span>,</span>
-<span id="cb10-5"><a href="#cb10-5"></a>    <span class="at">NMHC =</span> <span class="st">`</span><span class="at">NMHC(GT)</span><span class="st">`</span>,</span>
-<span id="cb10-6"><a href="#cb10-6"></a>    <span class="at">S_NMHC =</span> <span class="st">`</span><span class="at">PT08.S2(NMHC)</span><span class="st">`</span>,</span>
-<span id="cb10-7"><a href="#cb10-7"></a>    <span class="at">C6H6 =</span> <span class="st">`</span><span class="at">C6H6(GT)</span><span class="st">`</span>,</span>
-<span id="cb10-8"><a href="#cb10-8"></a>    <span class="at">NOx =</span> <span class="st">`</span><span class="at">NOx(GT)</span><span class="st">`</span>,</span>
-<span id="cb10-9"><a href="#cb10-9"></a>    <span class="at">S_NOx =</span> <span class="st">`</span><span class="at">PT08.S3(NOx)</span><span class="st">`</span>,</span>
-<span id="cb10-10"><a href="#cb10-10"></a>    <span class="at">NO2 =</span> <span class="st">`</span><span class="at">NO2(GT)</span><span class="st">`</span>,</span>
-<span id="cb10-11"><a href="#cb10-11"></a>    <span class="at">S_NO2 =</span> <span class="st">`</span><span class="at">PT08.S4(NO2)</span><span class="st">`</span>,</span>
-<span id="cb10-12"><a href="#cb10-12"></a>    <span class="at">S_O3 =</span> <span class="st">`</span><span class="at">PT08.S5(O3)</span><span class="st">`</span></span>
-<span id="cb10-13"><a href="#cb10-13"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Rename columns 3-12</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>air <span class="ot">&lt;-</span> air <span class="sc">%&gt;%</span> </span>
+<span id="cb10-3"><a href="#cb10-3"></a>  <span class="fu">rename</span>(</span>
+<span id="cb10-4"><a href="#cb10-4"></a>    <span class="at">CO =</span> <span class="st">`</span><span class="at">CO(GT)</span><span class="st">`</span>,</span>
+<span id="cb10-5"><a href="#cb10-5"></a>    <span class="at">S_CO =</span> <span class="st">`</span><span class="at">PT08.S1(CO)</span><span class="st">`</span>,</span>
+<span id="cb10-6"><a href="#cb10-6"></a>    <span class="at">NMHC =</span> <span class="st">`</span><span class="at">NMHC(GT)</span><span class="st">`</span>,</span>
+<span id="cb10-7"><a href="#cb10-7"></a>    <span class="at">S_NMHC =</span> <span class="st">`</span><span class="at">PT08.S2(NMHC)</span><span class="st">`</span>,</span>
+<span id="cb10-8"><a href="#cb10-8"></a>    <span class="at">C6H6 =</span> <span class="st">`</span><span class="at">C6H6(GT)</span><span class="st">`</span>,</span>
+<span id="cb10-9"><a href="#cb10-9"></a>    <span class="at">NOx =</span> <span class="st">`</span><span class="at">NOx(GT)</span><span class="st">`</span>,</span>
+<span id="cb10-10"><a href="#cb10-10"></a>    <span class="at">S_NOx =</span> <span class="st">`</span><span class="at">PT08.S3(NOx)</span><span class="st">`</span>,</span>
+<span id="cb10-11"><a href="#cb10-11"></a>    <span class="at">NO2 =</span> <span class="st">`</span><span class="at">NO2(GT)</span><span class="st">`</span>,</span>
+<span id="cb10-12"><a href="#cb10-12"></a>    <span class="at">S_NO2 =</span> <span class="st">`</span><span class="at">PT08.S4(NO2)</span><span class="st">`</span>,</span>
+<span id="cb10-13"><a href="#cb10-13"></a>    <span class="at">S_O3 =</span> <span class="st">`</span><span class="at">PT08.S5(O3)</span><span class="st">`</span></span>
+<span id="cb10-14"><a href="#cb10-14"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <table class="caption-top table">
@@ -3433,7 +3439,6 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 </tr>
 </tbody>
 </table>
-</section>
 <section id="tidying-the-dataset" class="level3">
 <h3 class="anchored" data-anchor-id="tidying-the-dataset">Tidying The Dataset</h3>
 <div class="cell">
@@ -3628,6 +3633,7 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 </div>
 </div>
 </div>
+<p>Concentrations of nitrogen dioxide were significantly higher than other pollutants from March 2004 - November 2024. Although fluctuations in concentrations vary, some noticeable trends include a dip in August 2004 for pollutants like ozone (pink), non-methane hydrocarbon (red), and carbon monoxide (blue). Other dips occurred in February 2005 and April 2005 with the latter being more rapid and severe. Additionally, the concentration for nitrogen oxide follows a contradictory pattern when compared to the other pollutants. For instance, in October 2004, while concentration levels for other pollutants were at a peak, concentration levels for nitrogen dioxide were at a low point. </p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -3661,6 +3667,7 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 </div>
 </div>
 </div>
+<p>The boxplot depicts the fluctuation of each pollutant. Nitrogen dioxide (purple) exhibits the highest concentration compared to the other pollutants. On the other hand, nitrogen oxide (green) had the lowest concentration. The high concentration of nitrogen dioxide is expected in urban areas where there is an abundance of fossil fuel combustion from cars. Also, the wide IQR range suggests that nitrogen dioxide has the highest variability in concentration over time.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -3693,6 +3700,21 @@ Attaching package: &#39;lubridate&#39;</code></pre>
 </div>
 </div>
 </div>
+<p>The bar graph shows that relative humidity and temperature have an inverse relationship. In months where the temperature is low, relative humidity is pretty high and vice versa. The temperature rises from June 2004 to September 2004 and falls from November 2004 to February 2005. Relative humidity is especially high in fall and winter months which is depicted in the graph from October 2004 - March 2005. </p>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<section id="addressing-potential-errors" class="level2">
+<h2 class="anchored" data-anchor-id="addressing-potential-errors">Addressing Potential Errors</h2>
+<p><strong>Negative values in the Dataset:</strong></p>
+<p>In our dataset, negative values (-200) were assigned for any measurements that had missing values and/or invalid data points which led to a negative value when calculating the mean of each pollutant for each month. To address this, we only considered the sensor measurements for each pollutant rather than the actual pollutant concentrations.</p>
+<p><strong>Outliers in the Dataset:</strong></p>
+<p>Outliers present potential errors in analyzing the dataset due to its nature to skew statistical measurements. Because we are calculating the mean, it is important to take into account any outliers as well. This was addressed by using the IQR method to identify and filter out the outliers. However, this approach can be subjective, especially when working with larger datasets. Also, some extreme values might be valid (i.e. pollution spikes during certain events). </p>
+<p><strong>Sensor Measurement Error:</strong></p>
+<p>Inaccurate readings can occur due to improper calibrations and sensor measurement drifts which can misinterpret pollutant concentration conclusions. This can happen due to environmental factors, calibration issues, or sensor aging. Because the data was collected over many months, these errors have a higher chance at influencing sensor measurements and affect the accuracy of the data. Thus, it is important to take into account the environmental factors (like temperature and humidity) when analyzing the data. </p>
+<p><strong>Regional Specificity:</strong></p>
+<p>This dataset focuses on the pollutant concentrations in a specific area, meaning that the variation of air quality across different locations may not be represented well. Factors such as traffic and industrial activity, and geographical features can influence the pollutant levels in the area. As a result, while the data provides valuable insights into air quality of the are over time, the ability to generalize the data and trends in other parts of the region may be limited. </p>
+</section>
 </section>
 
 </main>
