@@ -71,7 +71,7 @@ air <- air %>%
 ```
 
 | Variable | Description                                                    |
-|----------------|---------------------------------------------|
+|--------------------|----------------------------------------------------|
 | `Date`   | The date of the measurement                                    |
 | `Time`   | The time of the measurement.                                   |
 | `CO`     | Concentration of carbon monoxide ($CO$) in the air (µg/m³).    |
@@ -96,8 +96,6 @@ air <- air %>%
 summary(air[, -c(1, 2)])
 ```
 
-Based on the summary, it will be more helpful to implement the sensor measurements in the analyses since non-sensor measurements have negative means (which is unusual).
-
 ```{r}
 #| code-fold: true
 # Histogram for S_CO 
@@ -106,7 +104,7 @@ hist(air$S_CO,
      xlab = "CO concentrations")
 ```
 
-Using the variable **`S_CO`** as a test case, a histogram revealed the presence of noticeable outliers. These outliers were identified and removed using the **Interquartile Range (IQR) method** to improve data quality.
+Based on the summary statistics, an unusual minimum value of -200.00 was observed across all variables. To investigate this anomaly, the variable `S_CO` was analyzed as a test case. A histogram revealed the presence of significant outliers, including values around -200.00. To address these issues and enhance data quality, outliers were identified and removed using the **Interquartile Range (IQR) method**.
 
 ```{r}
 #| code-fold: true
@@ -167,6 +165,17 @@ head(airM, 5)
 
 Upon inspecting the dataset, some non-sensor measurements (e.g., CO, NMHC) revealed unusual negative values, suggesting potential inaccuracies. For this reason, the analysis will prioritize **sensor-based variables**.
 
+```{r}
+#| code-fold: true
+airM <- air[ ,-c(3,5,6,8,10)] %>%
+  group_by(Year, Month) %>%
+  summarize(across(where(is.numeric), 
+                   ~mean(., na.rm = TRUE)),
+            .groups = "drop")
+
+head(airM, 5)
+```
+
 # Analysis
 
 ```{r fig.width=10, fig.height=6}
@@ -187,18 +196,44 @@ airM %>%
     y = "Concentrations in µg/m³"
   ) +
   scale_color_manual(
-    values = c("Carbon Monoxide" = "blue", 
-               "Non-Methane Hydrocarbon" = "red", 
-               "Nitrogen Oxide" = "chartreuse3",
-               "Nitrogen Dioxide" = "purple",
-               "Ozone" = "magenta"),
-    name = "Pollutants"
+    values = c("Carbon Monoxide" = "dodgerblue3", 
+               "Non-Methane Hydrocarbon" = "brown2", 
+               "Nitrogen Oxide" = "palegreen3",
+               "Nitrogen Dioxide" = "mediumpurple3",
+               "Ozone" = "hotpink2"),
+    name = "Pollutant"
   ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
 ```
 
 ```{r fig.width=10, fig.height=6}
 #| code-fold: true
+# Pivot data frame by Pollutant 
+airM_2 <- airM %>%
+  pivot_longer(
+    cols = c(3:7), 
+    names_to = "Pollutant", 
+    values_to = "Concentration"
+  )
+
+# Plot Pollutant Concentrations 
+airM_2 %>% 
+  ggplot(aes(x = Pollutant)) +
+  geom_boxplot(aes(y = Concentration, fill = Pollutant), size = 0.5) +
+  labs(
+    title = "Concentrations of Pollutants",
+    x = "Pollutant",
+    y = "Concentration (µg/m³)"
+  ) +
+  scale_fill_manual(
+    values = c("dodgerblue3", "brown2", "mediumpurple3", "palegreen3", "hotpink2"), # Specify colors for each pollutant
+    labels = c("Carbon Monoxide", "Non-methane Hydrocarbons", "Nitrogen Dioxide", "Nitrogen Oxide", "Ozone")
+  )
+```
+
+```{r fig.width=10, fig.height=6}
+#| code-fold: true
+# Plot monthly Temperatures & Relative Humidity 
 airM %>%
   pivot_longer(
     cols = c(RH, T), 
