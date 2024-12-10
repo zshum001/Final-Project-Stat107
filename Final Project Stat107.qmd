@@ -256,6 +256,7 @@ airM %>%
   ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+The bar graph shows that relative humidity and temperature have an inverse relationship. In months where the temperature is low, relative humidity is pretty high and vice versa. The temperature rises from June 2004 to September 2004 and falls from November 2004 to February 2005. Relative humidity is especially high in fall and winter months which is depicted in the graph from October 2004 - March 2005. 
 
 ```{r}
 #| code-fold: true
@@ -272,7 +273,41 @@ ggplot() +
                  
 ```
 
-The bar graph shows that relative humidity and temperature have an inverse relationship. In months where the temperature is low, relative humidity is pretty high and vice versa. The temperature rises from June 2004 to September 2004 and falls from November 2004 to February 2005. Relative humidity is especially high in fall and winter months which is depicted in the graph from October 2004 - March 2005. 
+
+```{r}
+# Regression Analysis
+# Plot the relationship between CO and NO
+
+ggplot(data = air) +
+  geom_point(aes(x=S_CO, y = S_NOx)) + 
+  labs(
+    title = "Relationship between CO and NO",
+    x = "Carbon Monoxide",
+    y = "Nitrogen Oxide")
+
+# Generate some statistics
+model1 <- lm(log(S_NOx) ~ (S_CO), data = air)
+summary(model1)
+```
+There seems to be an exponential relationship between these two variables. 
+
+```{r}
+# Conduct a regression analysis after we have concluded that there is an exponential relationship between the variables
+
+ggplot(data = air) +
+  geom_point(aes(x = S_CO, y = S_NOx)) +  
+  geom_line(
+    data = air,
+    aes(x = S_CO, y = exp(predict(model1, newdata = air))),  
+    color = "green"
+  ) +
+  labs(
+    title = "Relationship between CO and NO",
+    x = "Carbon Monoxide",
+    y = "Nitrogen Oxide"
+  )
+```
+
 
 # Conclusion
 
