@@ -258,7 +258,4 @@ ggplot() +
   geom_density(data = air_filtered, aes(x=S_O3, color="Ozone")) +
   labs(title = "Densities of Pollutant Concentrations", x = "Concentration (µg/m³)", y = "Density") +
   scale_color_manual(values = c("Carbon Monoxide" = "blue", "Non-Methane Hydrocarbon" = "red", "Nitrogen Oxide" = "chartreuse3","Nitrogen Dioxide" = "purple","Ozone"  = "magenta"))
-
-
-                 
 ```
