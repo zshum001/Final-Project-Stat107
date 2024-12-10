@@ -19,11 +19,19 @@ format:
 
 Air quality is a critical component in environmental health, directly influencing both the ecosystem and human well-being. It is determined by the presence of various pollutants including, but not limited to nitrogen dioxide and carbon monoxide. Poor air quality is linked to serious health issues, including respiratory diseases, cardiovascular problems, and reduced life expectancy. Moreover, air pollution contributes to climate change and harming wildlife. Monitoring and understanding air quality prompts initiatives centered on reducing the concentration of air pollutants, thereby, creating a cleaner environment.
 
-## The Dataset
+The specific pollutants we will explore in this study include:
 
-The UCI Air Quality Dataset was collected by the University of California, Irvine and acquired from Kaggle. It measures the concentration of about 5 different pollutants in the air in a given area. Some pollutants that are measured include carbon monoxide, benzene, and nitrogen dioxide. It measures pollutant concentrations every hour from March 2004 to April 2005.
+1.  **Carbon Monoxide** ($CO$): A colorless, odorless gas that is produced by the incomplete combustion of fossil fuels, which contributes to air pollution and can be harmful to humans as it blocks the successful delivery of oxygen to vital areas.  
 
-### Packages
+2.  **Non-Methane Hydrocarbon** ($NMHC$)**:** Organic compounds excluding methane that contribute to the formation of ground level ozone and secondary air pollutants through photochemical reactions. 
+
+3.  **Nitrogen Dioxide** ($NO_2$)**:** A reddish-brown colored gas that is produced by combustion of fossil fuels, contributes to acid rain, smog, and respiratory problems in humans.
+
+4.  **Nitrogen Oxide** ($NOx$)**:** Similarly to $NO_2$, a gas that is produced by combustion of fossil fuels, contributes to acid rain, smog, and ground level ozone.
+
+5.  **Ozone** ($O_3$)**:** A secondary pollutant formed in the atmosphere from precursor emissions like $NOx$ and volatile organic compounds.
+
+## Packages
 
 ```{r}
 library(readxl)
@@ -33,7 +41,9 @@ library(tidyverse)
 library(dplyr)
 ```
 
-### Reading Dataset
+## The Dataset
+
+The UCI Air Quality Dataset was collected by the University of California, Irvine and acquired from Kaggle. It measures the concentration of about 5 different pollutants in the air in a given area. Some pollutants that are measured include carbon monoxide, benzene, and nitrogen dioxide. It measures pollutant concentrations every hour from March 2004 to April 2005.
 
 ```{r}
 #| code-fold: true
@@ -41,44 +51,11 @@ air <- read_excel("AirQualityUCI.xls")
 head(air)
 ```
 
-The original dataset contains 9,357 observations and 15 variables.
-
-1.  `Date`: The date of the measurement
-
-2.  `Time`: The time of the measurement.
-
-3.  `CO(GT)`: Concentration of carbon monoxide (CO) in the air (µg/m³).
-
-4.  `PT0.S1(CO)`: Sensor measurement for CO concentration.
-
-5.  `NMHC(GT)`: Concentration of non-methane hydrocarbons (NMHC) (µg/m³).
-
-6.  `C6H6(GT)`: Concentration of benzene (C6H6) in the air (µg/m³).
-
-7.  `PT08.S2(NMHC)`: Sensor measurement for NMHC concentration.
-
-8.  `NOx(GT)`: Concentration of nitrogen oxide (NOx) in the air (µg/m³).
-
-9.  `PT08.S3(NOx)`: Sensor measurement for NOx concentration.
-
-10. `NO2(GT)`: Concentration of nitrogen dioxide (NO2) in the air (µg/m³).
-
-11. `PT08.S4(NO2)`: Sensor measurement for NO2 concentration.
-
-12. `PT08.S5(O3)`: Sensor measurement for ozone (O3) concentration
-
-13. `T`: Temperature (Celsius)
-
-14. `RH`: Relative humidity (g/m³)
-
-15. `AH`: Absolute humidity (g/m³)
-
-### Renaming Columns
-
-Variable columns 3-12 will be renamed as followed to enhance clarity:
+The original dataset contains 9,357 observations and 15 variables. Variable columns 3-12 were renamed as followed to enhance clarity.
 
 ```{r}
 #| code-fold: true
+# Rename columns 3-12
 air <- air %>% 
   rename(
     CO = `CO(GT)`,
@@ -94,25 +71,23 @@ air <- air %>%
   )
 ```
 
-`CO(GT)` to `CO`
-
-`PT0.S1(CO)` to `S_CO`
-
-`NMHC(GT)` to `NMHC`
-
-`PT08.S2(NMHC)` to `S_NMHC`
-
-`C6H6(GT)` to `C6H6`
-
-`NOx(GT)` to `NOx`
-
-`PT08.S3(NOx)` to `S_NOx`
-
-`NO2(GT)` to `NO2`
-
-`PT08.S4(NO2)` to `S_NO2`
-
-`PT08.S5(O3)` to `S_O3`
+| Variable | Description                                                    |
+|--------------------|----------------------------------------------------|
+| `Date`   | The date of the measurement                                    |
+| `Time`   | The time of the measurement.                                   |
+| `CO`     | Concentration of carbon monoxide ($CO$) in the air (µg/m³).    |
+| `S_CO`   | Sensor measurement for $CO$ concentration.                     |
+| `NMHC`   | Concentration of non-methane hydrocarbons ($NMHC$) (µg/m³).    |
+| `C6H6`   | Concentration of benzene ($C_6H_6$) in the air (µg/m³).        |
+| `S_NMHC` | Sensor measurement for NMHC concentration.                     |
+| `NOx`    | Concentration of nitrogen oxide ($NOx$) in the air (µg/m³).    |
+| `S_NOx`  | Sensor measurement for $NOx$ concentration.                    |
+| `NO2`    | Concentration of nitrogen dioxide ($NO_2$) in the air (µg/m³). |
+| `S_NO2`  | Sensor measurement for $NO_2$ concentration.                   |
+| `S_O3`   | Sensor measurement for ozone ($O_3$) concentration             |
+| `T`      | Temperature (Celsius)                                          |
+| `RH`     | Relative humidity (g/m³)                                       |
+| `AH`     | Absolute humidity (g/m³)                                       |
 
 ### Tidying The Dataset
 
@@ -122,8 +97,6 @@ air <- air %>%
 summary(air[, -c(1, 2)])
 ```
 
-Based on the summary, it will be more helpful to implement the sensor measurements in the analyses since non-sensor measurements have negative means (which is unusual).
-
 ```{r}
 #| code-fold: true
 # Histogram for S_CO 
@@ -132,7 +105,7 @@ hist(air$S_CO,
      xlab = "CO concentrations")
 ```
 
-From graphing a histogram of, it is obvious that outlines exist. We will use variable S_CO as a starting point for tidying up the data. We will use the IQR method to identify outliers and filter them out of the dataset.
+Based on the summary statistics, an unusual minimum value of -200.00 was observed across all variables. To investigate this anomaly, the variable `S_CO` was analyzed as a test case. A histogram revealed the presence of significant outliers, including values around -200.00. To address these issues and enhance data quality, outliers were identified and removed using the **Interquartile Range (IQR) method**.
 
 ```{r}
 #| code-fold: true
@@ -147,12 +120,13 @@ upper_bound <- Q3 + 1.5 * IQR
 
 # Filter rows to remove outliers
 air_filtered <- air[air$S_CO >= lower_bound & air$S_CO <= upper_bound, ]
-nrow(air)
-nrow(air_filtered)
-nrow(air) - nrow(air_filtered)
 ```
 
-484 observations were removed from the dataset.
+The outcome:
+
+-   484 total observations were removed.
+
+-   The distribution of **`S_CO`** shifted closer to normality, although still retaining a slight positive skew.
 
 ```{r}
 #| code-fold: true
@@ -161,18 +135,15 @@ hist(air_filtered$S_CO,
      xlab = "CO concentrations")
 ```
 
-while still positively skewed, it is a great improvement from the previous graph
+### Reformatting The Dataset
+
+To effectively analyze monthly variations in pollutant concentrations, the dataset will be reorganized by grouping the data by month and year, calculating the average values for each variable within these groups. This restructuring will provide a clearer understanding of seasonal trends and fluctuations.
 
 ```{r}
 #| code-fold: true
 # Reassign original dataset with filtered dataset
 air <- air_filtered
-```
 
-### Reformatting The Dataset
-
-```{r}
-#| code-fold: true
 # Convert 'Date' column to y-m-d format
 air$Date <- ymd(air$Date)
 
@@ -186,31 +157,36 @@ air <- air %>%
 # Group by Year and Month for summarization
 airM <- air %>%
   group_by(Year, Month) %>%
-  summarize(across(where(is.numeric), ~mean(., na.rm = TRUE)))
+  summarize(across(where(is.numeric), 
+                   ~mean(., na.rm = TRUE)),
+            .groups = "drop")
 
 head(airM, 5)
 ```
 
-# Methodology
+Upon inspecting the dataset, some non-sensor measurements (e.g., CO, NMHC) revealed unusual negative values, suggesting potential inaccuracies. For this reason, the analysis will prioritize **sensor-based variables**.
+
+```{r}
+#| code-fold: true
+# Disregard non-sensor pollutant measurements 
+airM <- airM[ ,-c(3,5,6,8,10)]
+
+head(airM, 5)
+```
 
 # Analysis
 
-```{r fig.width=10, fig.height=8}
+```{r fig.width=10, fig.height=6}
 #| code-fold: true
 # Plot monthly Concentrations
 airM %>%
   # Use interaction to combine Month and Year
   ggplot(aes(x = interaction(Month, Year, sep = "-"))) +
   # Add points and lines for different pollutants
-  geom_point(aes(y = S_CO, color = "Carbon Monoxide")) + 
   geom_line(aes(y = S_CO, color = "Carbon Monoxide", group = 1)) +
-  geom_point(aes(y = S_NMHC, color = "Non-Methane Hydrocarbon")) +
   geom_line(aes(y = S_NMHC, color = "Non-Methane Hydrocarbon", group = 2)) +
-  geom_point(aes(y = S_NOx, color = "Nitrogen Oxide")) + 
   geom_line(aes(y = S_NOx, color = "Nitrogen Oxide", group = 3)) +
-  geom_point(aes(y = S_NO2, color = "Nitrogen Dioxide")) + 
   geom_line(aes(y = S_NO2, color = "Nitrogen Dioxide", group = 3)) +
-  geom_point(aes(y = S_O3, color = "Ozone")) + 
   geom_line(aes(y = S_O3, color = "Ozone", group = 3)) +
   labs(
     title = "Average Concentrations of Pollutants by Month (2004-2005)",
@@ -218,15 +194,48 @@ airM %>%
     y = "Concentrations in µg/m³"
   ) +
   scale_color_manual(
-    values = c("Carbon Monoxide" = "blue", 
-               "Non-Methane Hydrocarbon" = "red", 
-               "Nitrogen Oxide" = "chartreuse3",
-               "Nitrogen Dioxide" = "purple",
-               "Ozone" = "magenta"),
-    name = "Pollutants"
+    values = c("Carbon Monoxide" = "dodgerblue3", 
+               "Non-Methane Hydrocarbon" = "brown2", 
+               "Nitrogen Oxide" = "palegreen3",
+               "Nitrogen Dioxide" = "mediumpurple3",
+               "Ozone" = "hotpink2"),
+    name = "Pollutant"
   ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
+```
 
+Concentrations of nitrogen dioxide were significantly higher than other pollutants from March 2004 - November 2024. Although fluctuations in concentrations vary, some noticeable trends include a dip in August 2004 for pollutants like ozone (pink), non-methane hydrocarbon (red), and carbon monoxide (blue). Other dips occurred in February 2005 and April 2005 with the latter being more rapid and severe. Additionally, the concentration for nitrogen oxide follows a contradictory pattern when compared to the other pollutants. For instance, in October 2004, while concentration levels for other pollutants were at a peak, concentration levels for nitrogen dioxide were at a low point. 
+
+```{r fig.width=10, fig.height=6}
+#| code-fold: true
+# Pivot data frame by Pollutant 
+airM_2 <- airM %>%
+  pivot_longer(
+    cols = c(3:7), 
+    names_to = "Pollutant", 
+    values_to = "Concentration"
+  )
+
+# Plot Pollutant Concentrations 
+airM_2 %>% 
+  ggplot(aes(x = Pollutant)) +
+  geom_boxplot(aes(y = Concentration, fill = Pollutant), size = 0.5) +
+  labs(
+    title = "Concentrations of Pollutants",
+    x = "Pollutant",
+    y = "Concentration (µg/m³)"
+  ) +
+  scale_fill_manual(
+    values = c("dodgerblue3", "brown2", "mediumpurple3", "palegreen3", "hotpink2"), # Specify colors for each pollutant
+    labels = c("Carbon Monoxide", "Non-methane Hydrocarbons", "Nitrogen Dioxide", "Nitrogen Oxide", "Ozone")
+  )
+```
+
+The boxplot depicts the fluctuation of each pollutant. Nitrogen dioxide (purple) exhibits the highest concentration compared to the other pollutants. On the other hand, nitrogen oxide (green) had the lowest concentration. The high concentration of nitrogen dioxide is expected in urban areas where there is an abundance of fossil fuel combustion from cars. Also, the wide IQR range suggests that nitrogen dioxide has the highest variability in concentration over time.
+
+```{r fig.width=10, fig.height=6}
+#| code-fold: true
+# Plot monthly Temperatures & Relative Humidity 
 airM %>%
   pivot_longer(
     cols = c(RH, T), 
@@ -248,6 +257,7 @@ airM %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+<<<<<<< HEAD
 ```{r}
 #| code-fold: true
 ggplot() +
@@ -262,3 +272,26 @@ ggplot() +
 
                  
 ```
+=======
+The bar graph shows that relative humidity and temperature have an inverse relationship. In months where the temperature is low, relative humidity is pretty high and vice versa. The temperature rises from June 2004 to September 2004 and falls from November 2004 to February 2005. Relative humidity is especially high in fall and winter months which is depicted in the graph from October 2004 - March 2005. 
+
+# Conclusion
+
+## Addressing Potential Errors 
+
+**Negative values in the Dataset:**
+
+In our dataset, negative values (-200) were assigned for any measurements that had missing values and/or invalid data points which led to a negative value when calculating the mean of each pollutant for each month. To address this, we only considered the sensor measurements for each pollutant rather than the actual pollutant concentrations.
+
+**Outliers in the Dataset:**
+
+Outliers present potential errors in analyzing the dataset due to its nature to skew statistical measurements. Because we are calculating the mean, it is important to take into account any outliers as well. This was addressed by using the IQR method to identify and filter out the outliers. However, this approach can be subjective, especially when working with larger datasets. Also, some extreme values might be valid (i.e. pollution spikes during certain events). 
+
+**Sensor Measurement Error:**
+
+Inaccurate readings can occur due to improper calibrations and sensor measurement drifts which can misinterpret pollutant concentration conclusions. This can happen due to environmental factors, calibration issues, or sensor aging. Because the data was collected over many months, these errors have a higher chance at influencing sensor measurements and affect the accuracy of the data. Thus, it is important to take into account the environmental factors (like temperature and humidity) when analyzing the data. 
+
+**Regional Specificity:**
+
+This dataset focuses on the pollutant concentrations in a specific area, meaning that the variation of air quality across different locations may not be represented well. Factors such as traffic and industrial activity, and geographical features can influence the pollutant levels in the area. As a result, while the data provides valuable insights into air quality of the are over time, the ability to generalize the data and trends in other parts of the region may be limited. 
+>>>>>>> zoe
