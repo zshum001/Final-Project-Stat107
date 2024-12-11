@@ -216,7 +216,7 @@ airM %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
 ```
 
-Nitrogen dioxide concentrations were notably higher than those of other pollutants from March to November 2004. While fluctuations were evident, certain trends stood out, such as a dip in August 2004 for ozone (pink), non-methane hydrocarbons (red), and carbon monoxide (blue). Additional dips occurred in February and April 2005, with the latter being more pronounced and severe. Interestingly, nitrogen oxide concentrations displayed a **contrasting pattern** compared to other pollutants. For example, in October 2004, when other pollutants peaked, nitrogen oxide concentrations reached their lowest levels.
+Nitrogen dioxide concentrations were notably higher than those of other pollutants from March to November 2004. While fluctuations were evident, certain trends stood out, such as a dip in August 2004 for ozone (pink), non-methane hydrocarbons (red), and carbon monoxide (blue). Additional dips occurred in February and April 2005, with the latter being more pronounced and severe. Interestingly, nitrogen oxide concentrations displayed a contrasting pattern compared to other pollutants. For example, in October 2004, when other pollutants peaked, nitrogen oxide concentrations reached their lowest levels.
 
 ```{r fig.width=10, fig.height=6}
 #| code-fold: true
@@ -243,7 +243,7 @@ airM_2 %>%
   )
 ```
 
-The boxplot depicts the fluctuation of each pollutant. Most of the pollutants have a concentration lower than 1200 µg/m³. On the other hand, nitrogen dioxide had the highest concentration at above 1500 µg/m³. The high concentration of nitrogen dioxide is expected in urban areas where there is an abundance of fossil fuel combustion from cars. 
+The boxplot depicts the fluctuation of each pollutant. Most of the pollutants has a concentration lower than 1200 μg/ m3. On the other hand, nitrogen dioxide had the highest concentration at above 1500 μg/ m3. The high concentration of nitrogen dioxide is expected in urban areas where there is an abundance of fossil fuel combustion from cars. 
 
 ```{r}
 #| code-fold: true
@@ -287,7 +287,7 @@ air %>%
 
 In an attempt to track the inverse relationship that was previously observed in the line graph between carbon monoxide and nitrogen oxide, a regression analysis was conducted. After plotting the data points, there seemed to be an exponential relationship between the two variables and a regression analysis produced a r squared value of 0.69.
 
-Therefore, there seems to be a moderate correlation between the variables. When carbon monoxide concentration levels go up, nitrogen oxide levels may be predicted to decrease at a decreasing rate, following a slow exponential decay.
+Therefore, there seems to be a moderate correlation between the variables. When carbon monoxide concentration levels go up, nitrogen oxide levels may be predicted to decrease at a decreasing rate, following a slow exponential decay. 
 
 # Conclusion
 
