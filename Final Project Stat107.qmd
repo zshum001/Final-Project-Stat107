@@ -245,7 +245,7 @@ airM_2 %>%
 
 The boxplot depicts the fluctuation of each pollutant. Most of the pollutants has a concentration lower than 1200 μg/ m3. On the other hand, nitrogen dioxide had the highest concentration at above 1500 μg/ m3. The high concentration of nitrogen dioxide is expected in urban areas where there is an abundance of fossil fuel combustion from cars. 
 
-```{r}
+```{r fig.width=10, fig.height=6}
 #| code-fold: true
 ggplot() +
   geom_density(data = air, aes(x = S_CO, color="Carbon Monoxide")) +
@@ -267,6 +267,7 @@ Some of the more spread out distributions, such as Ozone and Nitrogen Dioxide, s
 ## Regression Analysis
 
 ```{r}
+#| code-fold: true
 # Generate some statistics
 model1 <- lm(log(S_NOx) ~ (S_CO), data = air)
 summary(model1)
